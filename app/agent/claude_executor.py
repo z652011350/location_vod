@@ -8,6 +8,32 @@ from app.store.event_store import append_event
 
 logger = logging.getLogger(__name__)
 
+# 全局进程注册表：跟踪运行中的 ClaudeExecutor 实例，供中止任务使用
+_running_executors: dict[str, "ClaudeExecutor"] = {}
+
+
+def register_executor(task_id: str, executor: "ClaudeExecutor") -> None:
+    """注册运行中的 executor。"""
+    _running_executors[task_id] = executor
+
+
+def unregister_executor(task_id: str) -> None:
+    """注销 executor（执行完成或异常后调用）。"""
+    _running_executors.pop(task_id, None)
+
+
+def get_running_executor(task_id: str) -> Optional["ClaudeExecutor"]:
+    """获取指定任务的运行中 executor，无则返回 None。"""
+    return _running_executors.get(task_id)
+
+
+def get_running_pid(task_id: str) -> Optional[int]:
+    """获取指定任务运行中 Claude CLI 子进程的 PID，无则返回 None。"""
+    executor = _running_executors.get(task_id)
+    if executor and executor.process and executor.process.returncode is None:
+        return executor.process.pid
+    return None
+
 
 class ClaudeExecutor:
     """封装 Claude Code CLI 的子进程调用。"""
@@ -39,6 +65,10 @@ class ClaudeExecutor:
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
+
+        # 记录子进程 PID
+        append_event(self.task_id, "cli_started", {"pid": self.process.pid})
+        logger.info(f"[{self.task_id}] Claude CLI 进程已启动, PID: {self.process.pid}")
 
         # 读取 stderr 的后台任务
         stderr_lines: list[str] = []
@@ -107,6 +137,7 @@ async def run_with_timeout(
     executor = ClaudeExecutor(task_id)
     lines: list[str] = []
 
+    register_executor(task_id, executor)
     try:
         async with asyncio.timeout(timeout):
             async for line in executor.execute(prompt):
@@ -119,5 +150,7 @@ async def run_with_timeout(
     except Exception as e:
         append_event(task_id, "cli_error", {"message": str(e)})
         raise
+    finally:
+        unregister_executor(task_id)
 
     return lines

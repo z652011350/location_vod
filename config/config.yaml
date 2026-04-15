@@ -1,13 +1,13 @@
 app:
   host: "127.0.0.1"
-  port: 8000
+  port: 19991
 
 paths:
   data_root: "data"
   tasks_root: "data/tasks"
   knowledge_root: "data/knowledge"
   code_repo_root: "/Users/spongbob/for_guance/api_dfx/DataBases"
-  docs_repo_root: "/Users/spongbob/for_guance/api_dfx_2.0"
+  docs_repo_root: "/Users/spongbob/for_guance/api_dfx_2.0/data/docs"
   sdk_repo_root: "/Users/spongbob/for_guance/api_dfx/api"
 
 agent:

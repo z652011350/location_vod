@@ -1,11 +1,12 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api.page_api import router as page_router
 from app.api.task_api import router as task_router
+from app.api.knowledge_api import router as knowledge_router
 from app.core.config import get_settings
 from app.core.paths import ensure_dirs
 
@@ -21,10 +22,23 @@ app = FastAPI(title="Location VOD - HarmonyOS 问题辅助定位", lifespan=life
 
 # 注册 API 路由
 app.include_router(task_router)
+app.include_router(knowledge_router)
 
-# 注册页面路由
-app.include_router(page_router)
+# React 前端构建产物
+frontend_dist = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+if frontend_dist.exists():
+    # 静态资源（JS/CSS）
+    app.mount("/assets", StaticFiles(directory=str(frontend_dist / "assets")), name="assets")
 
-# 静态文件
-static_dir = Path(__file__).resolve().parent / "static"
-app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+    # SPA fallback: 所有非 /api 路由返回 index.html
+    @app.get("/{path:path}")
+    async def serve_spa(request: Request, path: str):
+        # 不拦截 API 路由
+        if path.startswith("api/"):
+            return None
+        # 尝试匹配静态文件
+        file_path = frontend_dist / path
+        if file_path.exists() and file_path.is_file():
+            return FileResponse(str(file_path))
+        # SPA fallback
+        return FileResponse(str(frontend_dist / "index.html"))

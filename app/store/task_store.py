@@ -52,6 +52,33 @@ def list_tasks() -> list[dict]:
     return results
 
 
+def reset_task_data(task_id: str, status: TaskStatus) -> Optional[dict]:
+    """重置任务数据：清理 process/ 和 output/ 下的文件，更新状态。
+
+    清理的文件：events.jsonl, stdout.log, stderr.log, final_result.json
+    """
+    task_dir = get_task_dir(task_id)
+    if task_dir is None:
+        return None
+
+    # 清理 process 目录下的运行时文件
+    process_dir = task_dir / "process"
+    for filename in ["events.jsonl", "stdout.log", "stderr.log"]:
+        f = process_dir / filename
+        if f.exists():
+            f.unlink()
+
+    # 清理 output 目录下的结果文件
+    output_dir = task_dir / "output"
+    for filename in ["final_result.json"]:
+        f = output_dir / filename
+        if f.exists():
+            f.unlink()
+
+    # 更新状态
+    return update_status(task_id, status)
+
+
 def _resolve_tasks_root() -> Path:
     from app.core.config import get_settings
     return Path(get_settings().paths.tasks_root)

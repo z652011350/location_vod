@@ -17,6 +17,7 @@ def create_task_workspace(
     problem_description: str = "",
     log_content: str = "",
     code_snippet: str = "",
+    module_name: str = "",
 ) -> Path:
     """创建任务工作目录结构并写入初始 task.json。"""
     root = _tasks_root() / task_id
@@ -34,6 +35,7 @@ def create_task_workspace(
             "problem_description": problem_description,
             "log_content": log_content,
             "code_snippet": code_snippet,
+            "module_name": module_name,
         },
     }
     with open(root / "task.json", "w", encoding="utf-8") as f:
