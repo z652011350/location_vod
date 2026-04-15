@@ -146,7 +146,7 @@ export default function MermaidBlock({ code }) {
           </div>
           {/* Controls toolbar */}
           <div
-            className="absolute top-4 right-4 flex items-center gap-2"
+            className="absolute top-4 right-4 z-10 flex items-center gap-2"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center gap-1 bg-white/10 rounded-lg px-2 py-1">
