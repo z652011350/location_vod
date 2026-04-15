@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import MermaidBlock from './MermaidBlock'
 
 function MarkdownRenderer({ content }) {
   return (
     <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
       components={{
         code({ className, children, ...props }) {
           const codeStr = String(children).replace(/\n$/, '')
