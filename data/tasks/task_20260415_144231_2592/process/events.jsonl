@@ -1,0 +1,5 @@
+{"timestamp": "2026-04-15T14:42:31.271625", "event_type": "task_created", "message": "任务已创建"}
+{"timestamp": "2026-04-15T14:42:31.310183", "event_type": "task_started", "message": "任务开始执行"}
+{"timestamp": "2026-04-15T14:42:46.998345", "event_type": "task_started", "message": "任务开始执行"}
+{"timestamp": "2026-04-15T14:45:50.055328", "event_type": "cli_output", "content": "API Error: 429 {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"},\"request_id\":\"2026041514454933db92ac203b4d46\"}"}
+{"timestamp": "2026-04-15T14:45:50.098878", "event_type": "task_completed", "message": "任务执行完成"}
