@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务详情 - Location VOD</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/app/" class="back-link">&larr; 返回列表</a>
+            <h1>任务详情</h1>
+        </header>
+
+        <!-- 任务信息 -->
+        <div id="task-info" class="task-info">
+            <span class="task-id" id="display-task-id">{{ task_id }}</span>
+            <span class="task-status" id="display-status">加载中...</span>
+        </div>
+
+        <!-- 分析过程 -->
+        <div class="analysis-panel">
+            <h2>分析过程</h2>
+            <div id="analysis-steps" class="steps-container">
+                <p class="empty-hint">等待分析开始...</p>
+            </div>
+        </div>
+
+        <!-- 最终结果 -->
+        <div id="result-panel" class="result-panel" style="display:none">
+            <h2>诊断结果</h2>
+            <div id="result-summary" class="result-summary"></div>
+            <div id="result-candidates" class="result-candidates"></div>
+            <div id="result-fixes" class="result-fixes"></div>
+        </div>
+    </div>
+
+    <script>
+        window.TASK_ID = "{{ task_id }}";
+    </script>
+    <script src="/static/js/task_detail.js"></script>
+</body>
+</html>

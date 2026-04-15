@@ -1,0 +1,26 @@
+app:
+  host: "127.0.0.1"
+  port: 8000
+
+paths:
+  data_root: "data"
+  tasks_root: "data/tasks"
+  knowledge_root: "data/knowledge"
+  code_repo_root: "/Users/spongbob/for_guance/api_dfx/DataBases"
+  docs_repo_root: "/Users/spongbob/for_guance/api_dfx_2.0"
+  sdk_repo_root: "/Users/spongbob/for_guance/api_dfx/api"
+
+agent:
+  command: "claude"
+  allowed_tools:
+    - "Bash"
+    - "Read"
+    - "Write"
+    - "Edit"
+    - "Grep"
+    - "Glob"
+    - "Agent"
+
+runtime:
+  max_concurrent_tasks: 1
+  task_timeout_seconds: 900
