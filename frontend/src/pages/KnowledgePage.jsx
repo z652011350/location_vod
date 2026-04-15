@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BookOpen, CheckCircle, Edit3, Sparkles, RefreshCw, Loader2, Search, AlertCircle, FileText, FolderX } from 'lucide-react'
+import FileContentViewer from '../components/FileContentViewer'
 
 const statusBadge = {
   ai_native: { label: 'AI 原生', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20', icon: Sparkles, animate: true },
@@ -17,6 +18,7 @@ export default function KnowledgePage() {
   const [editContent, setEditContent] = useState('')
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [fileLoading, setFileLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -34,6 +36,8 @@ export default function KnowledgePage() {
   const filteredModules = modules.filter(m =>
     m.module_name.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  const isAgentRunning = moduleData?.status === 'ai_native' && moduleData?.is_building
 
   async function selectModule(name) {
     setSelectedModule(name)
@@ -55,11 +59,13 @@ export default function KnowledgePage() {
     setActiveFile(filename)
     setEditing(false)
     setErrorMsg('')
+    setFileLoading(true)
     try {
       const res = await fetch(`/api/knowledge/${moduleName}/files/${filename}`)
       const data = await res.json()
       setFileContent(data.content || '')
     } catch {}
+    setFileLoading(false)
   }
 
   async function saveFile() {
@@ -222,12 +228,12 @@ export default function KnowledgePage() {
 
             {/* 文件 Tab */}
             {moduleData?.files?.length > 0 ? (
-              <div className="flex border-b border-slate-800 overflow-x-auto">
+              <div className="flex border-b border-slate-800 overflow-x-auto scrollbar-thin">
                 {moduleData.files.map(f => (
                   <button
                     key={f}
                     onClick={() => loadFile(selectedModule, f)}
-                    className={`px-4 py-2 text-xs font-medium whitespace-nowrap transition-colors ${
+                    className={`px-4 py-2 text-xs font-medium whitespace-nowrap transition-colors shrink-0 ${
                       activeFile === f
                         ? 'text-cyan-400 border-b-2 border-cyan-400 bg-cyan-500/5'
                         : 'text-slate-500 hover:text-slate-300'
@@ -247,43 +253,24 @@ export default function KnowledgePage() {
             {/* 文件内容 */}
             {moduleData?.files?.length > 0 && (
               <div className="p-4">
-                {editing ? (
-                  <div className="space-y-3">
-                    <textarea
-                      value={editContent}
-                      onChange={e => setEditContent(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 font-mono resize-y min-h-[400px] focus:outline-none focus:ring-1 focus:ring-cyan-500/50"
-                    />
-                    <div className="flex gap-2">
-                      <button
-                        onClick={saveFile}
-                        disabled={saving}
-                        className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium bg-cyan-500 text-white hover:bg-cyan-400 transition-colors disabled:opacity-50"
-                      >
-                        {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}
-                        {saving ? '保存中...' : '保存'}
-                      </button>
-                      <button
-                        onClick={() => { setEditing(false); setErrorMsg('') }}
-                        className="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 border border-slate-700 hover:border-slate-600 transition-colors"
-                      >
-                        取消
-                      </button>
-                    </div>
+                {fileLoading ? (
+                  <div className="flex items-center justify-center py-16 text-slate-500">
+                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    <span className="text-sm">加载中...</span>
                   </div>
                 ) : (
-                  <div className="relative">
-                    <button
-                      onClick={startEditing}
-                      className="absolute top-2 right-2 flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium text-slate-400 hover:text-slate-200 bg-slate-800 hover:bg-slate-700 transition-colors z-10"
-                    >
-                      <Edit3 className="w-3 h-3" />
-                      编辑
-                    </button>
-                    <pre className="text-sm text-slate-300 font-mono whitespace-pre-wrap bg-slate-950 rounded-lg p-4 max-h-[500px] overflow-y-auto border border-slate-800">
-                      {fileContent || '无内容'}
-                    </pre>
-                  </div>
+                  <FileContentViewer
+                    filename={activeFile}
+                    content={fileContent}
+                    editing={editing}
+                    editContent={editContent}
+                    onEditChange={setEditContent}
+                    onSave={saveFile}
+                    onCancel={() => { setEditing(false); setErrorMsg('') }}
+                    onStartEdit={startEditing}
+                    saving={saving}
+                    isAgentRunning={isAgentRunning}
+                  />
                 )}
               </div>
             )}

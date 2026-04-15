@@ -23,4 +23,4 @@ agent:
 
 runtime:
   max_concurrent_tasks: 1
-  task_timeout_seconds: 900
+  task_timeout_seconds: 3600

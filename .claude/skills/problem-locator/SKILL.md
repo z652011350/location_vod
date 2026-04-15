@@ -38,11 +38,25 @@ description: "定位鸿蒙开发者问题。当开发者提交故障日志、错
 
 ### 阶段 2：知识库查询
 
-在 `knowledge_root` 目录下搜索与线索匹配的知识文件：
+在 `knowledge_root` 目录下搜索与线索匹配的知识文件。
 
-1. 按错误码搜索
-2. 按模块名搜索
-3. 按 API 名搜索
+**知识库文件用途和查询优先级**：
+
+- **`error_codes.json`** — 错误码映射表（**诊断优先查询**）。按错误码精确匹配，获取错误含义和源文件位置
+- **`api_chain.json`** — API 实现链路（**诊断优先查询**）。按 API 名匹配，追踪 NAPI 桥接到实现的完整链路
+- **`overview.md`** — 模块概览（精简参考）。了解模块职责和核心文件
+- **`common_issues.md`** — 常见问题模式（精简参考）。快速匹配已知问题模式
+- **`architecture.md`** — 架构总览（人类阅读文档）。需要深入理解模块架构时参考
+- **`call_chains.md`** — API 调用链流程（人类阅读文档）。需要理解 API 完整调用流程时参考
+- **`api_reference.md`** — API 参考手册（人类阅读文档）。需要查看接口参数、权限、错误码详情时参考
+- **`troubleshooting.md`** — 故障排查指南（人类阅读文档）。需要详细排查步骤和典型修复方案时参考
+
+**查询策略**：诊断时优先查询 `error_codes.json` 和 `api_chain.json`（结构化数据，精确匹配），其次查询 `overview.md` 和 `common_issues.md`（精简参考）。Wiki 文档（architecture.md、call_chains.md、api_reference.md、troubleshooting.md）作为补充参考，不作为主要诊断数据源。
+
+**搜索方式**：
+1. 按错误码搜索（优先查 `error_codes.json`）
+2. 按 API 名搜索（优先查 `api_chain.json`）
+3. 按模块名搜索
 4. 按错误事件名搜索
 
 若知识库中找到相关信息，记录匹配结果。

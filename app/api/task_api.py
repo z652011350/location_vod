@@ -186,7 +186,7 @@ async def api_stream_task(task_id: str, after: int = 0):
         # --- 3. 判断是启动执行还是仅观察 ---
         if task_data["status"] == TaskStatus.RUNNING.value:
             # 已在运行 → 仅轮询观察
-            poll_interval = 1.0
+            poll_interval = 15.0
         else:
             # created 状态 → 启动执行（状态更新封装在独立协程中，不依赖 SSE 存活）
             start_task(task_id)
@@ -194,7 +194,7 @@ async def api_stream_task(task_id: str, after: int = 0):
             asyncio.create_task(
                 _execute_and_finalize(task_id, task_data, prompt)
             )
-            poll_interval = 0.5
+            poll_interval = 15.0
 
         # --- 4. 统一轮询循环（仅推送事件，不处理结果） ---
         timeout_sec = settings.runtime.task_timeout_seconds
