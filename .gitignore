@@ -6,8 +6,8 @@ __pycache__/
 *.egg-info/
 
 # Data
-# data/tasks/
-# data/knowledge/
+data/tasks/
+data/knowledge/
 data/tmp/
 
 # IDE
