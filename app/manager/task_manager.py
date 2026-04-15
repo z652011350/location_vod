@@ -33,6 +33,7 @@ def create_task(
         code_snippet=code_snippet,
         module_name=module_name,
     )
+    logger.info(f"已创建任务 {task_id}，类型: {task_type.value}，工作空间路径: {root}")
     append_event(task_id, "task_created", {"message": "任务已创建"})
     return read_task(task_id)
 

@@ -1,0 +1,386 @@
+[
+  {
+    "api_name": "media.createAVPlayer",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsCreateAVPlayer",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "media.createAVRecorder",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVRecorderNapi::JsCreateAVRecorder",
+    "impl_file": "frameworks/js/avrecorder/avrecorder_napi.cpp"
+  },
+  {
+    "api_name": "media.createAVScreenCaptureRecorder",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVScreenCaptureNapi::JsCreateAVScreenRecorder",
+    "impl_file": "frameworks/js/avscreen_capture/avscreen_capture_napi.cpp"
+  },
+  {
+    "api_name": "media.createAVTranscoder",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVTransCoderNapi::JsCreateAVTransCoder",
+    "impl_file": "frameworks/js/avtranscoder/avtranscoder_napi.cpp"
+  },
+  {
+    "api_name": "media.createSoundPool",
+    "d_ts_file": "api/interface_sdk-js/api/multimedia/soundPool.d.ts",
+    "napi_func": "SoundPoolNapi::JsCreateSoundPool",
+    "impl_file": "frameworks/js/soundpool/src/soundpool_napi.cpp"
+  },
+  {
+    "api_name": "media.createParallelSoundPool",
+    "d_ts_file": "api/interface_sdk-js/api/multimedia/soundPool.d.ts",
+    "napi_func": "SoundPoolNapi::JsCreateParallelSoundPool",
+    "impl_file": "frameworks/js/soundpool/src/soundpool_napi.cpp"
+  },
+  {
+    "api_name": "media.createMediaSourceWithUrl",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "MediaSourceNapi::JsCreateMediaSourceWithUrl",
+    "impl_file": "frameworks/js/mediasource/media_source_napi.cpp"
+  },
+  {
+    "api_name": "media.createMediaSourceWithStreamData",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "MediaSourceNapi::JsCreateMediaSourceWithStreamData",
+    "impl_file": "frameworks/js/mediasource/media_source_napi.cpp"
+  },
+  {
+    "api_name": "media.createAVMetadataExtractor",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVMetadataExtractorNapi::JsCreateAVMetadataExtractor",
+    "impl_file": "frameworks/js/metadatahelper/avmetadataextractor_napi.cpp"
+  },
+  {
+    "api_name": "media.createAVImageGenerator",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVImageGeneratorNapi::JsCreateAVImageGenerator",
+    "impl_file": "frameworks/js/metadatahelper/avimagegenerator_napi.cpp"
+  },
+  {
+    "api_name": "media.getScreenCaptureMonitor",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "ScreenCaptureMonitorNapi::JsGetScreenCaptureMonitor",
+    "impl_file": "frameworks/js/screencapturemonitor/screen_capture_monitor_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.play",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsPlay",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.pause",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsPause",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.stop",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsStop",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.reset",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsReset",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.release",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsRelease",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.seek",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSeek",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.setVolume",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetVolume",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.setSpeed",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetSpeed",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.setPlaybackRate",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetPlaybackRate",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.setMediaSource",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetMediaSource",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.url",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetUrl / JsGetUrl",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.fdSrc",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetAVFileDescriptor / JsGetAVFileDescriptor",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.dataSrc",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetDataSrc / JsGetDataSrc",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.surfaceId",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetSurfaceID / JsGetSurfaceID",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.on",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetOnCallback",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.off",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsClearOnCallback",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.getTrackDescription",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsGetTrackDescription",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.selectTrack",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSelectTrack",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.deselectTrack",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsDeselectTrack",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.getCurrentTrack",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsGetCurrentTrack",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.addSubtitleUrl",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsAddSubtitleUrl",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.setDecryptionConfig",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetDecryptConfig",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.setPlaybackStrategy",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetPlaybackStrategy",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.setPlaybackRange",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetPlaybackRange",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.setSuperResolution",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsSetSuperResolution",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVPlayer.prepare",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVPlayerNapi::JsPrepare",
+    "impl_file": "frameworks/js/avplayer/avplayer_napi.cpp"
+  },
+  {
+    "api_name": "AVRecorder.prepare",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVRecorderNapi::JsPrepare",
+    "impl_file": "frameworks/js/avrecorder/avrecorder_napi.cpp"
+  },
+  {
+    "api_name": "AVRecorder.getInputSurface",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVRecorderNapi::JsGetInputSurface",
+    "impl_file": "frameworks/js/avrecorder/avrecorder_napi.cpp"
+  },
+  {
+    "api_name": "AVRecorder.start",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVRecorderNapi::JsStart",
+    "impl_file": "frameworks/js/avrecorder/avrecorder_napi.cpp"
+  },
+  {
+    "api_name": "AVRecorder.pause",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVRecorderNapi::JsPause",
+    "impl_file": "frameworks/js/avrecorder/avrecorder_napi.cpp"
+  },
+  {
+    "api_name": "AVRecorder.stop",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVRecorderNapi::JsStop",
+    "impl_file": "frameworks/js/avrecorder/avrecorder_napi.cpp"
+  },
+  {
+    "api_name": "AVRecorder.release",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVRecorderNapi::JsRelease",
+    "impl_file": "frameworks/js/avrecorder/avrecorder_napi.cpp"
+  },
+  {
+    "api_name": "AVRecorder.on",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVRecorderNapi::JsSetEventCallback",
+    "impl_file": "frameworks/js/avrecorder/avrecorder_napi.cpp"
+  },
+  {
+    "api_name": "AVScreenCaptureRecorder.init",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVScreenCaptureNapi::JsInit",
+    "impl_file": "frameworks/js/avscreen_capture/avscreen_capture_napi.cpp"
+  },
+  {
+    "api_name": "AVScreenCaptureRecorder.startRecording",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVScreenCaptureNapi::JsStartRecording",
+    "impl_file": "frameworks/js/avscreen_capture/avscreen_capture_napi.cpp"
+  },
+  {
+    "api_name": "AVScreenCaptureRecorder.stopRecording",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVScreenCaptureNapi::JsStopRecording",
+    "impl_file": "frameworks/js/avscreen_capture/avscreen_capture_napi.cpp"
+  },
+  {
+    "api_name": "AVScreenCaptureRecorder.release",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVScreenCaptureNapi::JsRelease",
+    "impl_file": "frameworks/js/avscreen_capture/avscreen_capture_napi.cpp"
+  },
+  {
+    "api_name": "AVTranscoder.prepare",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVTransCoderNapi::JsPrepare",
+    "impl_file": "frameworks/js/avtranscoder/avtranscoder_napi.cpp"
+  },
+  {
+    "api_name": "AVTranscoder.start",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVTransCoderNapi::JsStart",
+    "impl_file": "frameworks/js/avtranscoder/avtranscoder_napi.cpp"
+  },
+  {
+    "api_name": "AVTranscoder.cancel",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVTransCoderNapi::JsCancel",
+    "impl_file": "frameworks/js/avtranscoder/avtranscoder_napi.cpp"
+  },
+  {
+    "api_name": "AVTranscoder.release",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVTransCoderNapi::JsRelease",
+    "impl_file": "frameworks/js/avtranscoder/avtranscoder_napi.cpp"
+  },
+  {
+    "api_name": "AVTranscoder.fdSrc",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVTransCoderNapi::JsSetSrcFd / JsGetSrcFd",
+    "impl_file": "frameworks/js/avtranscoder/avtranscoder_napi.cpp"
+  },
+  {
+    "api_name": "AVTranscoder.fdDst",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVTransCoderNapi::JsSetDstFd / JsGetDstFd",
+    "impl_file": "frameworks/js/avtranscoder/avtranscoder_napi.cpp"
+  },
+  {
+    "api_name": "SoundPool.load",
+    "d_ts_file": "api/interface_sdk-js/api/multimedia/soundPool.d.ts",
+    "napi_func": "SoundPoolNapi::JsLoad",
+    "impl_file": "frameworks/js/soundpool/src/soundpool_napi.cpp"
+  },
+  {
+    "api_name": "SoundPool.play",
+    "d_ts_file": "api/interface_sdk-js/api/multimedia/soundPool.d.ts",
+    "napi_func": "SoundPoolNapi::JsPlay",
+    "impl_file": "frameworks/js/soundpool/src/soundpool_napi.cpp"
+  },
+  {
+    "api_name": "SoundPool.stop",
+    "d_ts_file": "api/interface_sdk-js/api/multimedia/soundPool.d.ts",
+    "napi_func": "SoundPoolNapi::JsStop",
+    "impl_file": "frameworks/js/soundpool/src/soundpool_napi.cpp"
+  },
+  {
+    "api_name": "SoundPool.release",
+    "d_ts_file": "api/interface_sdk-js/api/multimedia/soundPool.d.ts",
+    "napi_func": "SoundPoolNapi::JsRelease",
+    "impl_file": "frameworks/js/soundpool/src/soundpool_napi.cpp"
+  },
+  {
+    "api_name": "AVMetadataExtractor.fetchMetadata",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVMetadataExtractorNapi::JsResolveMetadata",
+    "impl_file": "frameworks/js/metadatahelper/avmetadataextractor_napi.cpp"
+  },
+  {
+    "api_name": "AVMetadataExtractor.fetchAlbumCover",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVMetadataExtractorNapi::JsFetchArtPicture",
+    "impl_file": "frameworks/js/metadatahelper/avmetadataextractor_napi.cpp"
+  },
+  {
+    "api_name": "AVMetadataExtractor.fetchFrameByTime",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVMetadataExtractorNapi::JsFetchFrameAtTime",
+    "impl_file": "frameworks/js/metadatahelper/avmetadataextractor_napi.cpp"
+  },
+  {
+    "api_name": "AVMetadataExtractor.release",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVMetadataExtractorNapi::JsRelease",
+    "impl_file": "frameworks/js/metadatahelper/avmetadataextractor_napi.cpp"
+  },
+  {
+    "api_name": "AVImageGenerator.fetchFrameByTime",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVImageGeneratorNapi::JsFetchFrameAtTime",
+    "impl_file": "frameworks/js/metadatahelper/avimagegenerator_napi.cpp"
+  },
+  {
+    "api_name": "AVImageGenerator.release",
+    "d_ts_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "napi_func": "AVImageGeneratorNapi::JsRelease",
+    "impl_file": "frameworks/js/metadatahelper/avimagegenerator_napi.cpp"
+  }
+]

@@ -1,0 +1,205 @@
+[
+  {
+    "code": "0",
+    "constant": "AVERR_OK",
+    "message": "Operation success.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "操作成功"
+  },
+  {
+    "code": "201",
+    "constant": "AVERR_NO_PERMISSION",
+    "message": "Permission denied.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "调用方缺少所需权限。需要在 module.json5 中声明对应权限。常见权限: ohos.permission.MICROPHONE（录制）, ohos.permission.CAPTURE_SCREEN（录屏）"
+  },
+  {
+    "code": "202",
+    "constant": "",
+    "message": "Not System App / System API error",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "系统API仅限系统应用调用，非系统应用无权使用"
+  },
+  {
+    "code": "401",
+    "constant": "AVERR_INVALID_PARAMETER",
+    "message": "Invalid parameter.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "参数错误。可能原因：必填参数未指定、参数类型不正确、参数校验失败"
+  },
+  {
+    "code": "801",
+    "constant": "AVERR_UNSUPPORT_CAPABILITY",
+    "message": "The api is not supported in the current version.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "当前版本不支持此 API 能力"
+  },
+  {
+    "code": "5400101",
+    "constant": "AVERR_NO_MEMORY",
+    "message": "The system memory is insufficient or the number of services reaches the upper limit.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "系统内存不足或服务数量达到上限。可能原因：同时创建了过多播放器/录制器实例"
+  },
+  {
+    "code": "5400102",
+    "constant": "AVERR_OPERATE_NOT_PERMIT",
+    "message": "Current status does not allow or do not have permission to perform this operation.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "当前状态不允许此操作。典型场景：在错误的状态下调用了方法（如在 idle 状态调用 play）"
+  },
+  {
+    "code": "5400103",
+    "constant": "AVERR_IO",
+    "message": "Data flow exception information.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "数据流异常。可能原因：文件读取失败、网络数据流中断、编解码数据异常"
+  },
+  {
+    "code": "5400104",
+    "constant": "AVERR_TIMEOUT",
+    "message": "System or network response timeout.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "系统或网络响应超时。常见于网络流媒体播放场景"
+  },
+  {
+    "code": "5400105",
+    "constant": "AVERR_SERVICE_DIED",
+    "message": "Service process died.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "媒体服务进程死亡。可能原因：服务端异常崩溃、内存不足被系统杀死"
+  },
+  {
+    "code": "5400106",
+    "constant": "AVERR_UNSUPPORT_FORMAT",
+    "message": "Unsupported media format.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "不支持的媒体格式。文件格式、编码格式不被当前系统支持"
+  },
+  {
+    "code": "5400107",
+    "constant": "AVERR_AUDIO_INTERRUPTED",
+    "message": "Audio interrupted.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "音频被中断。典型场景：电话来电、其他高优先级音频抢占"
+  },
+  {
+    "code": "5400108",
+    "constant": "AVERR_PARAMETER_OUT_OF_RANGE",
+    "message": "The parameter value is out of the specified range.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "参数值超出指定范围。例如 seek 位置超出媒体时长"
+  },
+  {
+    "code": "5400109",
+    "constant": "AVERR_SESSION_NOT_EXIST",
+    "message": "The parameter value means session does not exist.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "会话不存在"
+  },
+  {
+    "code": "5410002",
+    "constant": "AVERR_SEEK_CONTINUOUS_UNSUPPORTED",
+    "message": "Seek continuous unsupported.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "当前源不支持连续 seek（拖拽进度条场景）"
+  },
+  {
+    "code": "5410003",
+    "constant": "AVERR_SUPER_RESOLUTION_UNSUPPORTED",
+    "message": "Super-resolution unsupported.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "超分辨率功能不支持"
+  },
+  {
+    "code": "5410004",
+    "constant": "AVERR_SUPER_RESOLUTION_NOT_ENABLED",
+    "message": "No PlaybackStrategy set to enable super-resolution feature.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "未通过 PlaybackStrategy 启用超分辨率功能"
+  },
+  {
+    "code": "5411001",
+    "constant": "AVERR_IO_HOST_NOT_FOUND",
+    "message": "The address of server is incorrect, and IO can not find host.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "服务器地址错误，DNS 解析失败"
+  },
+  {
+    "code": "5411002",
+    "constant": "AVERR_IO_CONNECTION_TIMEOUT",
+    "message": "Network connection timeout.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "网络连接超时"
+  },
+  {
+    "code": "5411003",
+    "constant": "AVERR_IO_NETWORK_ABNORMAL",
+    "message": "Failed link due to abnormal network.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "网络异常导致连接失败"
+  },
+  {
+    "code": "5411004",
+    "constant": "AVERR_IO_NETWORK_UNAVAILABLE",
+    "message": "Failed link due to unavailable network.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "网络不可用导致连接失败"
+  },
+  {
+    "code": "5411005",
+    "constant": "AVERR_IO_NO_PERMISSION",
+    "message": "Network permission denied.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "网络权限被拒绝"
+  },
+  {
+    "code": "5411006",
+    "constant": "AVERR_IO_REQUEST_DENIED",
+    "message": "The client request parameters are incorrect or exceed the processing capacity.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "客户端请求参数错误或超出服务端处理能力"
+  },
+  {
+    "code": "5411007",
+    "constant": "AVERR_IO_RESOURCE_NOT_FOUND",
+    "message": "Cannot find available network resources.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "找不到可用的网络资源（404 等）"
+  },
+  {
+    "code": "5411008",
+    "constant": "AVERR_IO_SSL_CLIENT_CERT_NEEDED",
+    "message": "The server fails to verify the client certificate (not carried, invalid, or expired).",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "服务端要求客户端 SSL 证书，但未携带、无效或已过期"
+  },
+  {
+    "code": "5411009",
+    "constant": "AVERR_IO_SSL_CONNECTION_FAILED",
+    "message": "The client fails to verify the server certificate (not carried, invalid, or expired).",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "客户端验证服务端 SSL 证书失败"
+  },
+  {
+    "code": "5411010",
+    "constant": "AVERR_IO_SSL_SERVER_CERT_UNTRUSTED",
+    "message": "IO SSL server cert untrusted.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "服务端 SSL 证书不受信任"
+  },
+  {
+    "code": "5411011",
+    "constant": "AVERR_IO_UNSUPPORTED_REQUEST",
+    "message": "Unsupported request due to network protocols.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "网络协议不支持该请求"
+  },
+  {
+    "code": "5411012",
+    "constant": "AVERR_IO_CLEARTEXT_NOT_PERMITTED",
+    "message": "Http cleartext traffic is not permitted.",
+    "source_file": "api/interface_sdk-js/api/@ohos.multimedia.media.d.ts",
+    "description": "不允许 HTTP 明文流量，需要使用 HTTPS"
+  }
+]

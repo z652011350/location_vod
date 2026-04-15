@@ -1,0 +1,15 @@
+{
+  "module_name": "multimedia_player_framework",
+  "status": "ai_native",
+  "built_at": "2026-04-15T22:48:34.439130",
+  "files": [
+    "api_chain.json",
+    "api_reference.md",
+    "architecture.md",
+    "call_chains.md",
+    "common_issues.md",
+    "error_codes.json",
+    "overview.md",
+    "troubleshooting.md"
+  ]
+}

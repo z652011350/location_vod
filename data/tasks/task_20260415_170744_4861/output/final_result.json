@@ -1,0 +1,4 @@
+{
+  "summary": "分析完成（无法解析结构化结果）",
+  "raw_output": "知识库构建完成！以下是最终产出汇总：\n## `multimedia_player_framework` 知识库构建完成\n**部署目录**: `data/knowledge/multimedia_player_framework/`\n### 结构化数据文件（机器消费）\n| 文件 | 大小 | 内容 |\n|------|------|------|\n| `overview.md` | 5.3 KB | 模块概览、目录结构、18个核心文件说明 |\n| `error_codes.json` | 10.9 KB | 31条错误码（API9层21条 + AVScreenCapture 10条） |\n| `api_chain.json` | 12.7 KB | 46条API链路（AVPlayer 21个 + AVRecorder 6个 + C API 16个等） |\n| `common_issues.md` | 5.7 KB | 5大类常见问题（权限/参数/状态/网络/服务异常） |\n### Wiki 文档（人类阅读）\n| 文件 | 大小 | 内容 |\n|------|------|------|\n| `architecture.md` | 17 KB | 8层组件架构 + Mermaid flowchart + 依赖关系 |\n| `call_chains.md` | 16 KB | 10个核心API调用链 + 3个Mermaid序列图 |\n| `api_reference.md` | 21 KB | 全部公开接口参考（JS API + C API） |\n| `troubleshooting.md` | 18 KB | 错误码排查指南 + FAQ |\n旧数据已备份至 `data/knowledge/multimedia_player_framework.bak/`。"
+}

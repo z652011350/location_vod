@@ -1,5 +1,22 @@
-{"timestamp": "2026-04-15T21:13:10.583090", "event_type": "task_retried", "message": "任务已重试"}
-{"timestamp": "2026-04-15T21:13:10.614095", "event_type": "task_started", "message": "任务开始执行"}
-{"timestamp": "2026-04-15T21:13:10.621557", "event_type": "cli_started", "pid": 86216}
-{"timestamp": "2026-04-15T21:28:10.643590", "event_type": "cli_timeout", "message": "执行超时 (900s)"}
-{"timestamp": "2026-04-15T21:28:10.647456", "event_type": "task_timeout", "message": "任务执行超时"}
+{"timestamp": "2026-04-15T22:04:02.336328", "event_type": "task_retried", "message": "任务已重试"}
+{"timestamp": "2026-04-15T22:04:02.357373", "event_type": "task_started", "message": "任务开始执行"}
+{"timestamp": "2026-04-15T22:04:02.365260", "event_type": "cli_started", "pid": 77736}
+{"timestamp": "2026-04-15T22:48:34.377923", "event_type": "cli_output", "content": "知识库构建完成！以下是最终产出汇总："}
+{"timestamp": "2026-04-15T22:48:34.378597", "event_type": "cli_output", "content": "## `multimedia_player_framework` 知识库构建完成"}
+{"timestamp": "2026-04-15T22:48:34.379148", "event_type": "cli_output", "content": "**部署目录**: `data/knowledge/multimedia_player_framework/`"}
+{"timestamp": "2026-04-15T22:48:34.379466", "event_type": "cli_output", "content": "### 结构化数据文件（机器消费）"}
+{"timestamp": "2026-04-15T22:48:34.379887", "event_type": "cli_output", "content": "| 文件 | 大小 | 内容 |"}
+{"timestamp": "2026-04-15T22:48:34.380158", "event_type": "cli_output", "content": "|------|------|------|"}
+{"timestamp": "2026-04-15T22:48:34.380395", "event_type": "cli_output", "content": "| `overview.md` | 5.3 KB | 模块概览、目录结构、18个核心文件说明 |"}
+{"timestamp": "2026-04-15T22:48:34.380746", "event_type": "cli_output", "content": "| `error_codes.json` | 10.9 KB | 31条错误码（API9层21条 + AVScreenCapture 10条） |"}
+{"timestamp": "2026-04-15T22:48:34.381049", "event_type": "cli_output", "content": "| `api_chain.json` | 12.7 KB | 46条API链路（AVPlayer 21个 + AVRecorder 6个 + C API 16个等） |"}
+{"timestamp": "2026-04-15T22:48:34.381837", "event_type": "cli_output", "content": "| `common_issues.md` | 5.7 KB | 5大类常见问题（权限/参数/状态/网络/服务异常） |"}
+{"timestamp": "2026-04-15T22:48:34.382133", "event_type": "cli_output", "content": "### Wiki 文档（人类阅读）"}
+{"timestamp": "2026-04-15T22:48:34.382408", "event_type": "cli_output", "content": "| 文件 | 大小 | 内容 |"}
+{"timestamp": "2026-04-15T22:48:34.382630", "event_type": "cli_output", "content": "|------|------|------|"}
+{"timestamp": "2026-04-15T22:48:34.382816", "event_type": "cli_output", "content": "| `architecture.md` | 17 KB | 8层组件架构 + Mermaid flowchart + 依赖关系 |"}
+{"timestamp": "2026-04-15T22:48:34.383009", "event_type": "cli_output", "content": "| `call_chains.md` | 16 KB | 10个核心API调用链 + 3个Mermaid序列图 |"}
+{"timestamp": "2026-04-15T22:48:34.383235", "event_type": "cli_output", "content": "| `api_reference.md` | 21 KB | 全部公开接口参考（JS API + C API） |"}
+{"timestamp": "2026-04-15T22:48:34.383442", "event_type": "cli_output", "content": "| `troubleshooting.md` | 18 KB | 错误码排查指南 + FAQ |"}
+{"timestamp": "2026-04-15T22:48:34.383700", "event_type": "cli_output", "content": "旧数据已备份至 `data/knowledge/multimedia_player_framework.bak/`。"}
+{"timestamp": "2026-04-15T22:48:34.439900", "event_type": "task_completed", "message": "任务执行完成"}
