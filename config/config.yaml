@@ -5,7 +5,7 @@ app:
 paths:
   data_root: "data"
   tasks_root: "data/tasks"
-  knowledge_root: "/Users/spongbob/for_guance/data/knowledge"
+  knowledge_root: "data/knowledge"
   code_repo_root: "/Users/spongbob/for_guance/api_dfx/DataBases"
   docs_repo_root: "/Users/spongbob/for_guance/api_dfx_2.0/data/docs"
   sdk_repo_root: "/Users/spongbob/for_guance/api_dfx/api"

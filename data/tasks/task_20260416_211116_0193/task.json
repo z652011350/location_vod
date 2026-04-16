@@ -1,0 +1,13 @@
+{
+  "task_id": "task_20260416_211116_0193",
+  "task_type": "problem_locating",
+  "status": "succeeded",
+  "created_at": "2026-04-16T21:11:16.948843",
+  "updated_at": "2026-04-16T21:14:43.594486",
+  "input": {
+    "problem_description": "【媒体子系统】多次点击播放音频，切到后台，自动停止长时任务\n\n\n咨询描述：【媒体子系统】多次点击播放音频，切到后台，自动停止长时任务\n\n咨询场景描述：在应用前台能一直连续播放，切到后台则不能正常播放了，报错05-12 17:51:05.119   49959-49959   A00000/com.cod...d.audio/Paint  com.codoo...nd.audio  E     VoiceListPlayer, Invoke avPlayer failed, code is 5400103, message is IO Error: unsupport interface, state=error, stack: Cannot get SourceMap info, dump raw stack:",
+    "log_content": "\n=====================Backtrace=======================\n#00 pc 00000000006f1968 /system/lib64/platformsdk/libark_jsruntime.so\n#01 pc 00000000006f1edc /system/lib64/platformsdk/libark_jsruntime.so\n#02 pc 0000000000324ec0 /system/lib64/platformsdk/libark_jsruntime.so\n#03 pc 00000000001bd04c /system/lib64/platformsdk/libark_jsruntime.so\n#04 pc 00000000001bcadc /system/lib64/platformsdk/libark_jsruntime.so\n#05 pc 000000000024f588 /system/lib64/platformsdk/libark_jsruntime.so\n#06 pc 00000000005ce3b0 /system/lib64/platformsdk/libark_jsruntime.so\n#07 pc 00000000005a4a68 /system/lib64/platformsdk/libark_jsruntime.so\n#08 pc 0000000000058430 /system/lib64/platformsdk/libace_napi.z.so\n#09 pc 0000000000018a44 /system/lib64/platformsdk/libmedia_soundpool.z.so\n05-12 17:51:05.125   49959-49959   A00000/com.cod...d.audio/Paint  com.codoo...nd.audio  E     VoiceListPlayer, Invoke avPlayer failed, code is 5400102, message is Operate Not Permit: current state is not idle, unsupport set fd, state=error, stack: Cannot get SourceMap info, dump raw stack:\n=====================Backtrace=======================\n#00 pc 00000000006f1968 /system/lib64/platformsdk/libark_jsruntime.so\n#01 pc 00000000006f1edc /system/lib64/platformsdk/libark_jsruntime.so\n#02 pc 0000000000324ec0 /system/lib64/platformsdk/libark_jsruntime.so\n#03 pc 00000000001bd04c /system/lib64/platformsdk/libark_jsruntime.so\n#04 pc 00000000001bcadc /system/lib64/platformsdk/libark_jsruntime.so\n#05 pc 000000000024f588 /system/lib64/platformsdk/libark_jsruntime.so\n#06 pc 00000000005ce3b0 /system/lib64/platformsdk/libark_jsruntime.so\n#07 pc 00000000005a4a68 /system/lib64/platformsdk/libark_jsruntime.so\n#08 pc 0000000000058430 /system/lib64/platformsdk/libace_napi.z.so\n#09 pc 0000000000018a44 /system/lib64/platformsdk/libmedia_soundpool.z.so",
+    "code_snippet": "",
+    "module_name": ""
+  }
+}

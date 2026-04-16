@@ -1,0 +1,138 @@
+{
+  "summary": "AVPlayer长时间播放多段音频时出现5400103 (IO Error)，主要由资源管理不当（未正确reset/release）、数据源IO异常或网络问题导致",
+  "diagnostic_depth": "triage",
+  "module_identified": "multimedia_player_framework",
+  "clues": {
+    "error_codes": ["5400103"],
+    "event_names": [],
+    "domains": [],
+    "call_stack_highlights": [],
+    "so_libraries": [],
+    "modules": ["multimedia_player_framework"],
+    "api_names": ["AVPlayer"],
+    "hilog_domain_ids": []
+  },
+  "knowledge_matches": [
+    {
+      "source": "error_codes.json",
+      "content": "错误码5400103 (MSERR_EXT_API9_IO): IO错误，包括文件读写失败、数据源IO异常等。由 MSERR_OPEN_FILE_FAILED、MSERR_FILE_ACCESS_FAILED、MSERR_DATA_SOURCE_IO_ERROR 等内部错误码映射而来。检查文件路径、URI可达性、存储权限等。"
+    },
+    {
+      "source": "common_issues.md",
+      "content": "错误码5400103 (MSERR_EXT_API9_IO)：通用IO错误，网络场景下可能由多种网络问题触发。也可能由文件访问失败、数据源IO异常等触发。"
+    },
+    {
+      "source": "api_chain.json",
+      "content": "AVPlayer核心API调用链: media.createAVPlayer → AVPlayerNapi::JsCreateAVPlayer → 播控操作(prepare/play/pause/stop/reset/release) → PlayerServer对应方法。reset()重置到idle状态可重新设置资源，release()销毁实例释放资源。"
+    }
+  ],
+  "doc_references": [
+    {
+      "source": "errorcode-media.md",
+      "path": "zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md",
+      "relevant_content": "5400103 出现IO错误 - 错误信息: I/O error。可能原因: 媒体与其他模块的数据交互发生问题（图形、音频、网络、HDI、相机）。处理步骤: 确认网络是否通畅，并销毁当前实例，并重新创建，如果重新创建失败，则停止相关操作。"
+    },
+    {
+      "source": "开发指南 - using-avplayer-for-playback.md",
+      "path": "zh-cn/application-dev/media/media/using-avplayer-for-playback.md",
+      "relevant_content": "AVPlayer状态管理关键点：(1) prepared/playing/paused/completed状态占用大量运行内存，不使用时应调用reset()或release()回收资源；(2) 切换资源时应先调用reset()回到idle状态再设置新url；(3) 退出播放应调用release()销毁实例进入released状态；(4) 必须在idle状态下、未调用设置资源接口前完成stateChange和error事件的监听设置。"
+    },
+    {
+      "source": "代码实现 - hiplayer_impl.cpp",
+      "path": "multimedia_player_framework/services/engine/histreamer/player/hiplayer_impl.cpp",
+      "relevant_content": "MSERR_DATA_SOURCE_IO_ERROR在seek操作出错时上报，错误类型为PLAY_ERR，会触发播放器状态切换到PLAYER_STATE_ERROR。"
+    }
+  ],
+  "root_cause_candidates": [
+    {
+      "rank": 1,
+      "description": "多段音频切换时资源管理不当——未在正确的时机调用reset()释放前一段音频资源，导致资源泄漏或IO异常累积，最终触发5400103",
+      "diagnostic_confidence": "high",
+      "evidence": [
+        "官方文档明确指出prepared/playing/paused/completed状态占用大量运行内存，不使用时应调用reset()或release()回收资源",
+        "开发指南步骤7明确说明切换资源时需要先调用reset()方法回到idle状态，再设置新的url",
+        "5400103内部由MSERR_OPEN_FILE_FAILED、MSERR_FILE_ACCESS_FAILED、MSERR_DATA_SOURCE_IO_ERROR等映射而来，均与资源/文件访问相关",
+        "长时间播放场景下，未正确释放的实例会累积占用系统资源，导致后续段的IO操作失败"
+      ],
+      "evidence_sources": [
+        {"type": "documentation", "path": "zh-cn/application-dev/media/media/using-avplayer-for-playback.md"},
+        {"type": "documentation", "path": "zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md"},
+        {"type": "knowledge_base", "path": "data/knowledge/multimedia_player_framework/error_codes.json"},
+        {"type": "knowledge_base", "path": "data/knowledge/multimedia_player_framework/common_issues.md"}
+      ]
+    },
+    {
+      "rank": 2,
+      "description": "网络音频源的数据传输IO异常——长时间播放网络音频时，网络波动或服务器端断连导致数据源IO中断",
+      "diagnostic_confidence": "medium",
+      "evidence": [
+        "官方错误码文档指出5400103的可能原因包括'网络'模块的数据交互问题",
+        "common_issues.md记录5400103在网络场景下可由多种网络问题触发",
+        "问题描述提到'有时候会出现'，符合网络IO间歇性异常的特征",
+        "长时间播放增加了网络状态变化的可能性（WiFi切换、信号波动等）"
+      ],
+      "evidence_sources": [
+        {"type": "documentation", "path": "zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md"},
+        {"type": "knowledge_base", "path": "data/knowledge/multimedia_player_framework/common_issues.md"}
+      ]
+    },
+    {
+      "rank": 3,
+      "description": "使用fdSrc或dataSrc时文件描述符管理不当——播放多段本地音频时fd未正确关闭或偏移量越界",
+      "diagnostic_confidence": "medium",
+      "evidence": [
+        "error_codes.json指出5400103可由MSERR_FILE_ACCESS_FAILED触发，与文件描述符访问相关",
+        "common_issues.md记录5400102场景中提到fdSrc的fd已关闭或offset/length越界问题，类似问题也可能导致5400103",
+        "多段播放场景频繁打开/关闭fd，容易产生fd泄漏或无效fd引用"
+      ],
+      "evidence_sources": [
+        {"type": "knowledge_base", "path": "data/knowledge/multimedia_player_framework/error_codes.json"},
+        {"type": "knowledge_base", "path": "data/knowledge/multimedia_player_framework/common_issues.md"}
+      ]
+    }
+  ],
+  "fix_suggestions": [
+    {
+      "for_candidate": 1,
+      "steps": [
+        "确保每次切换音频段时，严格按照以下生命周期操作：stop() → reset() → 设置新url/fdSrc → prepare() → play()",
+        "在stateChange回调中监听状态变化，仅在idle状态下设置新资源，仅在prepared状态下调用play()",
+        "长时间播放场景建议实现错误恢复机制：在error回调中调用reset()回到idle状态，重新设置资源并播放",
+        "确保不再使用时调用release()彻底销毁实例，避免资源累积泄漏",
+        "参考代码模式：\n```typescript\navPlayer.on('stateChange', async (state: string, reason: media.StateChangeReason) => {\n  switch (state) {\n    case 'completed':\n    case 'stopped':\n      // 切换到下一段音频\n      await avPlayer.reset();\n      avPlayer.url = nextAudioUrl;\n      break;\n    case 'initialized':\n      await avPlayer.prepare();\n      break;\n    case 'prepared':\n      await avPlayer.play();\n      break;\n    case 'error':\n      // 错误恢复：重置后重新播放当前段\n      await avPlayer.reset();\n      avPlayer.url = currentAudioUrl;\n      break;\n  }\n});\navPlayer.on('error', (error: BusinessError) => {\n  console.error(`AVPlayer error: ${error.code} - ${error.message}`);\n});\n```"
+      ],
+      "references": [
+        "zh-cn/application-dev/media/media/using-avplayer-for-playback.md",
+        "zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md",
+        "data/knowledge/multimedia_player_framework/common_issues.md"
+      ]
+    },
+    {
+      "for_candidate": 2,
+      "steps": [
+        "在error回调中对5400103错误实现自动重试机制（最多重试2-3次）",
+        "监听bufferingUpdate事件，在缓冲不足时暂停播放，缓冲恢复后继续",
+        "确认网络权限ohos.permission.INTERNET已正确声明",
+        "考虑对网络音频URL做可达性检查后再交给AVPlayer播放",
+        "如果音频来源是CDN，检查是否存在URL过期问题（如带签名的URL有时效性）"
+      ],
+      "references": [
+        "zh-cn/application-dev/media/media/using-avplayer-for-playback.md",
+        "zh-cn/application-dev/media/media/streaming-media-playback-development-guide.md"
+      ]
+    },
+    {
+      "for_candidate": 3,
+      "steps": [
+        "如果使用fdSrc播放本地文件，确保fd在使用期间保持打开状态，播放完成后再关闭",
+        "检查fdSrc的offset和length参数是否在文件范围内，不要越界",
+        "每段音频使用独立的fd，避免复用同一个fd导致偏移量混乱",
+        "如果使用dataSrc回调模式，确保readAt回调返回正确的数据长度，不要返回负值或0（文件未结束时）"
+      ],
+      "references": [
+        "zh-cn/application-dev/reference/apis-media-kit/arkts-apis-media-AVPlayer.md",
+        "data/knowledge/multimedia_player_framework/common_issues.md"
+      ]
+    }
+  ]
+}

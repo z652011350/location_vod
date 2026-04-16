@@ -1,0 +1,21 @@
+{"timestamp": "2026-04-16T20:24:47.808017", "event_type": "task_retried", "message": "任务已重试"}
+{"timestamp": "2026-04-16T20:24:47.815797", "event_type": "task_started", "message": "任务开始执行"}
+{"timestamp": "2026-04-16T20:24:47.827670", "event_type": "cli_started", "pid": 21556}
+{"timestamp": "2026-04-16T20:58:02.795303", "event_type": "cli_output", "content": "`multimedia_av_codec` 模块知识库构建全部完成。"}
+{"timestamp": "2026-04-16T20:58:02.797393", "event_type": "cli_output", "content": "## 产出总结"}
+{"timestamp": "2026-04-16T20:58:02.798180", "event_type": "cli_output", "content": "8 个知识文件已写入 `data/knowledge/multimedia_av_codec/`，总计约 149KB："}
+{"timestamp": "2026-04-16T20:58:02.798768", "event_type": "cli_output", "content": "**结构化数据文件（机器消费）**："}
+{"timestamp": "2026-04-16T20:58:02.799350", "event_type": "cli_output", "content": "| 文件 | 大小 | 内容 |"}
+{"timestamp": "2026-04-16T20:58:02.799846", "event_type": "cli_output", "content": "|------|------|------|"}
+{"timestamp": "2026-04-16T20:58:02.800175", "event_type": "cli_output", "content": "| `overview.md` | 8.4KB | 模块概览、目录结构、核心文件、架构说明 |"}
+{"timestamp": "2026-04-16T20:58:02.800560", "event_type": "cli_output", "content": "| `error_codes.json` | 26.8KB | 103 条错误码（内部 AVCS_ERR_* + 公开 AV_ERR_* + JS 层） |"}
+{"timestamp": "2026-04-16T20:58:02.800807", "event_type": "cli_output", "content": "| `api_chain.json` | 26.3KB | 68 条 CAPI 函数调用链（10 个子系统全覆盖） |"}
+{"timestamp": "2026-04-16T20:58:02.800989", "event_type": "cli_output", "content": "| `common_issues.md` | 10KB | 9 大类 17 个常见问题场景 |"}
+{"timestamp": "2026-04-16T20:58:02.801170", "event_type": "cli_output", "content": "**Wiki 文档（人类阅读）**："}
+{"timestamp": "2026-04-16T20:58:02.801324", "event_type": "cli_output", "content": "| 文件 | 大小 | 内容 |"}
+{"timestamp": "2026-04-16T20:58:02.801476", "event_type": "cli_output", "content": "|------|------|------|"}
+{"timestamp": "2026-04-16T20:58:02.801640", "event_type": "cli_output", "content": "| `architecture.md` | 13.6KB | 4 层架构总览 + Mermaid flowchart + 依赖关系 |"}
+{"timestamp": "2026-04-16T20:58:02.801802", "event_type": "cli_output", "content": "| `call_chains.md` | 19.2KB | 6+ Mermaid sequenceDiagram + API 调用链流程 |"}
+{"timestamp": "2026-04-16T20:58:02.801999", "event_type": "cli_output", "content": "| `api_reference.md` | 27.7KB | 10 个子系统完整 API 参考手册 |"}
+{"timestamp": "2026-04-16T20:58:02.802136", "event_type": "cli_output", "content": "| `troubleshooting.md` | 17.1KB | 12 类故障排查指南 + 三层错误码对照 |"}
+{"timestamp": "2026-04-16T20:58:02.850353", "event_type": "task_completed", "message": "任务执行完成"}

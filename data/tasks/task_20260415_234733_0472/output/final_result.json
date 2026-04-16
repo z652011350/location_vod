@@ -1,0 +1,4 @@
+{
+  "summary": "分析完成（无法解析结构化结果）",
+  "raw_output": "**`multimedia_av_session` 模块知识库构建完成！**\n8 个文件已全部生成并部署到 `data/knowledge/multimedia_av_session/`：\n| 文件 | 类型 | 大小 | 内容概要 |\n|------|------|------|---------|\n| `overview.md` | 结构化 | 4.3K | 模块职责、目录结构、核心文件 |\n| `error_codes.json` | 结构化 | 24K | 69 个错误码（6600xxx + 661xxxx） |\n| `api_chain.json` | 结构化 | 25K | 58 条 API 调用链路 |\n| `common_issues.md` | 结构化 | 9.6K | 6 类常见问题模式 |\n| `architecture.md` | Wiki | 13K | 架构总览 + Mermaid flowchart + 状态图 |\n| `call_chains.md` | Wiki | 19K | 8 个核心 API 调用链 + sequenceDiagram |\n| `api_reference.md` | Wiki | 28K | 完整 API 参考手册（Manager/Session/Controller 三级） |\n| `troubleshooting.md` | Wiki | 23K | 11 类故障排查指南 + 流程图 + 速查表 |"
+}

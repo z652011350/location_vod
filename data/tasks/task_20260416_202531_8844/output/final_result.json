@@ -1,0 +1,4 @@
+{
+  "summary": "分析完成（无法解析结构化结果）",
+  "raw_output": "诊断完成。以下是诊断结果摘要：\n---\n## 诊断结果：AVPlayer 播放报错 5400103\n**模块**: multimedia_player_framework | **诊断深度**: 分诊（高置信度）\n### 错误码说明\n**5400103 (MSERR_EXT_API9_IO)** — IO错误，内部由 `MSERR_OPEN_FILE_FAILED`、`MSERR_FILE_ACCESS_FAILED`、`MSERR_DATA_SOURCE_IO_ERROR` 等映射而来。官方说明：媒体与其他模块（图形、音频、网络、HDI）的数据交互发生问题。\n### 根因分析（按可能性排序）\n| 排名 | 根因 | 置信度 |\n|------|------|--------|\n| 1 | **多段切换时资源管理不当** — 未在正确时机调用 reset() 释放前段资源，导致资源泄漏/IO异常累积 | 高 |\n| 2 | **网络音频源IO异常** — 长时间播放时网络波动或服务端断连 | 中 |\n| 3 | **fdSrc/dataSrc管理不当** — 多段本地播放时文件描述符泄漏或偏移越界 | 中 |\n### 核心修复建议\n1. **严格遵循 AVPlayer 状态机**：每次切段必须 `stop() → reset() → 设置新url → prepare() → play()`\n2. **在 stateChange 回调中驱动播放流程**，仅在 idle 状态设置资源，prepared 状态调用 play\n3. **实现 error 回调的自动恢复机制**：收到 5400103 后 reset → 重新设置资源 → 重播\n4. **不使用时及时 release()**，避免长时间运行累积资源占用\n详细的 JSON 诊断结果已写入 `data/tasks/skill_output/output/final_result.json`。"
+}

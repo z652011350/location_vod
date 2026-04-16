@@ -1,0 +1,15 @@
+{
+  "module_name": "multimedia_av_codec",
+  "status": "ai_native",
+  "built_at": "2026-04-16T20:58:02.849131",
+  "files": [
+    "api_chain.json",
+    "api_reference.md",
+    "architecture.md",
+    "call_chains.md",
+    "common_issues.md",
+    "error_codes.json",
+    "overview.md",
+    "troubleshooting.md"
+  ]
+}

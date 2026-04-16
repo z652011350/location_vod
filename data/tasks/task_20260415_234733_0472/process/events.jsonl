@@ -1,0 +1,16 @@
+{"timestamp": "2026-04-15T23:47:33.745573", "event_type": "task_created", "message": "任务已创建"}
+{"timestamp": "2026-04-15T23:47:33.766476", "event_type": "task_started", "message": "任务开始执行"}
+{"timestamp": "2026-04-15T23:47:33.782080", "event_type": "cli_started", "pid": 63835}
+{"timestamp": "2026-04-16T00:22:05.970821", "event_type": "cli_output", "content": "**`multimedia_av_session` 模块知识库构建完成！**"}
+{"timestamp": "2026-04-16T00:22:05.972044", "event_type": "cli_output", "content": "8 个文件已全部生成并部署到 `data/knowledge/multimedia_av_session/`："}
+{"timestamp": "2026-04-16T00:22:05.972353", "event_type": "cli_output", "content": "| 文件 | 类型 | 大小 | 内容概要 |"}
+{"timestamp": "2026-04-16T00:22:05.972569", "event_type": "cli_output", "content": "|------|------|------|---------|"}
+{"timestamp": "2026-04-16T00:22:05.972761", "event_type": "cli_output", "content": "| `overview.md` | 结构化 | 4.3K | 模块职责、目录结构、核心文件 |"}
+{"timestamp": "2026-04-16T00:22:05.972959", "event_type": "cli_output", "content": "| `error_codes.json` | 结构化 | 24K | 69 个错误码（6600xxx + 661xxxx） |"}
+{"timestamp": "2026-04-16T00:22:05.973138", "event_type": "cli_output", "content": "| `api_chain.json` | 结构化 | 25K | 58 条 API 调用链路 |"}
+{"timestamp": "2026-04-16T00:22:05.973331", "event_type": "cli_output", "content": "| `common_issues.md` | 结构化 | 9.6K | 6 类常见问题模式 |"}
+{"timestamp": "2026-04-16T00:22:05.973497", "event_type": "cli_output", "content": "| `architecture.md` | Wiki | 13K | 架构总览 + Mermaid flowchart + 状态图 |"}
+{"timestamp": "2026-04-16T00:22:05.973668", "event_type": "cli_output", "content": "| `call_chains.md` | Wiki | 19K | 8 个核心 API 调用链 + sequenceDiagram |"}
+{"timestamp": "2026-04-16T00:22:05.973829", "event_type": "cli_output", "content": "| `api_reference.md` | Wiki | 28K | 完整 API 参考手册（Manager/Session/Controller 三级） |"}
+{"timestamp": "2026-04-16T00:22:05.974002", "event_type": "cli_output", "content": "| `troubleshooting.md` | Wiki | 23K | 11 类故障排查指南 + 流程图 + 速查表 |"}
+{"timestamp": "2026-04-16T00:22:06.033404", "event_type": "task_completed", "message": "任务执行完成"}
