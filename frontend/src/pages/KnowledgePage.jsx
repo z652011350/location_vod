@@ -117,7 +117,7 @@ export default function KnowledgePage() {
   const BadgeIcon = badge?.icon || Sparkles
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-[calc(100vh-80px)]">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:h-[calc(100vh-104px)] lg:grid-rows-1">
       {/* 左侧：模块列表 */}
       <div className="lg:col-span-1 bg-slate-900 rounded-xl border border-slate-800 p-4 flex flex-col">
         <div className="flex items-center justify-between mb-3">
