@@ -1,0 +1,158 @@
+{
+  "summary": "AVPlayer长时间播放多段音频时出现5400103（IO Error），通常由资源管理不当（fdSrc描述符失效、未正确reset复用）、网络间歇性异常或长时间运行后内存/系统资源压力导致。",
+  "diagnostic_depth": "triage",
+  "module_identified": "multimedia_player_framework",
+  "clues": {
+    "error_codes": [
+      "5400103"
+    ],
+    "event_names": [],
+    "domains": [],
+    "call_stack_highlights": [],
+    "so_libraries": [],
+    "modules": [
+      "multimedia_player_framework"
+    ],
+    "api_names": [
+      "AVPlayer"
+    ],
+    "hilog_domain_ids": []
+  },
+  "knowledge_matches": [
+    {
+      "source": "error_codes.json",
+      "content": "错误码5400103对应MSERR_EXT_API9_IO，IO错误，包括文件读写失败、数据源IO异常等。由MSERR_OPEN_FILE_FAILED、MSERR_FILE_ACCESS_FAILED、MSERR_DATA_SOURCE_IO_ERROR等内部错误码映射而来。"
+    },
+    {
+      "source": "troubleshooting.md",
+      "content": "5400103常见场景：(1)文件不存在，URL指向的本地文件不存在；(2)文件权限不足；(3)FD无效，fdSrc传入的文件描述符已关闭或无效；(4)存储空间不足；(5)DataSrc回调异常。建议使用fdSrc时确保FD在播放期间保持打开，只在release后关闭fd。"
+    },
+    {
+      "source": "common_issues.md",
+      "content": "5400103在知识库中归类为网络问题和IO问题。网络场景下可能由多种网络问题触发，包括DNS解析失败、TCP连接超时、网络异常、设备网络不可用等。对于多段音频播放，更可能是本地资源管理问题。"
+    },
+    {
+      "source": "call_chains.md",
+      "content": "AVPlayer.prepare()调用链中可能触发5400103：在PlayerServer::PrepareAsync() → HiPlayerImpl::PrepareAsync() → Pipeline::Start() → DemuxerFilter阶段，若数据源IO异常则会回调此错误码。"
+    }
+  ],
+  "doc_references": [
+    {
+      "source": "errorcode-media.md (官方错误码文档)",
+      "path": "zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md",
+      "relevant_content": "5400103错误信息：I/O error。可能原因：媒体与其他模块的数据交互发生问题（图形、音频、网络、HDI、相机）。处理步骤：确认网络是否通畅，并销毁当前实例并重新创建，如果重新创建失败则停止相关操作。"
+    },
+    {
+      "source": "using-avplayer-for-playback.md (AVPlayer开发指南)",
+      "path": "zh-cn/application-dev/media/media/using-avplayer-for-playback.md",
+      "relevant_content": "播放状态处于prepared/playing/paused/completed时，播放引擎处于工作状态，占用大量运行内存。当客户端暂时不使用播放器时，应调用reset()或release()回收内存资源。更换资源应调用reset()重置到idle状态后再设置新url。"
+    }
+  ],
+  "root_cause_candidates": [
+    {
+      "rank": 1,
+      "description": "AVPlayer多段音频切换时资源管理不当，导致IO错误。具体表现为：使用fdSrc播放时，在音频切换过程中FD被提前关闭或未正确传递；或reset()后未等待idle状态就设置新url，导致数据源初始化失败。",
+      "diagnostic_confidence": "high",
+      "evidence": [
+        "知识库troubleshooting.md明确指出5400103的常见原因之一是'FD无效：fdSrc传入的文件描述符已关闭或无效'",
+        "官方开发指南强调reset()后才能设置新url，且需等待stateChange回调确认进入idle状态",
+        "代码仓hiplayer_impl.cpp中MSERR_OPEN_FILE_FAILED和MSERR_FILE_ACCESS_FAILED会映射为5400103",
+        "长时间播放多段音频的场景意味着频繁切换数据源，是FD管理和状态机操作的高风险场景"
+      ],
+      "evidence_sources": [
+        {
+          "type": "knowledge_base",
+          "path": "data/knowledge/multimedia_player_framework/troubleshooting.md"
+        },
+        {
+          "type": "documentation",
+          "path": "zh-cn/application-dev/media/media/using-avplayer-for-playback.md"
+        },
+        {
+          "type": "code",
+          "path": "multimedia_player_framework/services/engine/histreamer/player/hiplayer_impl.cpp"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "description": "长时间运行后系统资源压力增大（内存累积、解码器资源未完全释放），导致IO操作间歇性失败。频繁的prepare/reset循环可能导致底层Pipeline资源泄漏。",
+      "diagnostic_confidence": "medium",
+      "evidence": [
+        "官方开发指南明确指出'播放引擎处于工作状态需要占用系统大量运行内存'，建议及时调用reset/release回收资源",
+        "代码仓hiplayer_impl.cpp中NotifyAudioServiceDied()函数使用MSERR_EXT_API9_IO作为INFO_TYPE_ERROR_MSG的错误码上报",
+        "间歇性出现（'有时候'）符合资源耗尽类问题的特征"
+      ],
+      "evidence_sources": [
+        {
+          "type": "documentation",
+          "path": "zh-cn/application-dev/media/media/using-avplayer-for-playback.md"
+        },
+        {
+          "type": "code",
+          "path": "multimedia_player_framework/services/engine/histreamer/player/hiplayer_impl.cpp"
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "description": "音频源为网络资源时，网络间歇性波动导致IO错误。长时间播放多段网络音频时，偶发的网络抖动或服务器响应延迟会触发5400103。",
+      "diagnostic_confidence": "medium",
+      "evidence": [
+        "知识库common_issues.md将5400103归类为网络问题之一",
+        "官方errorcode-media.md说明可能原因为'媒体与其他模块的数据交互发生问题（图形、音频、网络、HDI、相机）'"
+      ],
+      "evidence_sources": [
+        {
+          "type": "knowledge_base",
+          "path": "data/knowledge/multimedia_player_framework/common_issues.md"
+        },
+        {
+          "type": "documentation",
+          "path": "zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md"
+        }
+      ]
+    }
+  ],
+  "fix_suggestions": [
+    {
+      "for_candidate": 1,
+      "steps": [
+        "确保fdSrc的FD在播放期间保持打开，仅在release()之后才关闭FD：在finally块中关闭fd，确保FD生命周期覆盖整个播放过程",
+        "严格遵循状态机：切换音频时先stop() → reset() → 监听stateChange等待idle状态 → 设置新url → prepare() → play()，不要跳过状态等待",
+        "使用Promise/async-await确保每一步完成后再执行下一步，避免异步竞态条件",
+        "在error事件回调中正确处理5400103：先reset()回到idle状态，再重新设置数据源并播放，而非直接在error状态继续操作"
+      ],
+      "references": [
+        "data/knowledge/multimedia_player_framework/troubleshooting.md (5400103修复方案)",
+        "zh-cn/application-dev/media/media/using-avplayer-for-playback.md (AVPlayer状态机与资源管理)"
+      ]
+    },
+    {
+      "for_candidate": 2,
+      "steps": [
+        "在每段音频播放完成（completed状态）后，调用reset()释放资源回到idle，而不是直接设置新url",
+        "如果不需要立即播放下一段，考虑调用release()彻底销毁实例，下一段播放时重新createAVPlayer()创建新实例",
+        "在error回调中增加release()逻辑，确保异常路径也能正确释放资源",
+        "监控应用内存使用，如果发现持续增长，排查是否有事件监听器重复注册或FD未关闭"
+      ],
+      "references": [
+        "zh-cn/application-dev/media/media/using-avplayer-for-playback.md (资源回收建议)",
+        "data/knowledge/multimedia_player_framework/common_issues.md (服务异常处理)"
+      ]
+    },
+    {
+      "for_candidate": 3,
+      "steps": [
+        "如果是网络音频源，在prepare前监听bufferingUpdate事件，确认缓冲状态正常",
+        "对网络源增加重试机制：捕获5400103错误后，reset()并重新设置url，最多重试2-3次",
+        "检查是否声明了ohos.permission.INTERNET权限",
+        "在url设置前验证网络连通性，对于不稳定的网络环境可考虑先下载到本地再播放"
+      ],
+      "references": [
+        "data/knowledge/multimedia_player_framework/common_issues.md (网络问题排查)",
+        "zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md (5400103处理步骤)"
+      ]
+    }
+  ]
+}

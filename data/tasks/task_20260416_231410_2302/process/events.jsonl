@@ -1,0 +1,20 @@
+{"timestamp": "2026-04-16T23:14:10.326818", "event_type": "task_created", "message": "任务已创建"}
+{"timestamp": "2026-04-16T23:14:10.346533", "event_type": "task_started", "message": "任务开始执行"}
+{"timestamp": "2026-04-16T23:14:10.361675", "event_type": "cli_started", "pid": 95951}
+{"timestamp": "2026-04-16T23:18:38.020021", "event_type": "cli_output", "content": "诊断完成。结果已写入 `final_result.json`。"}
+{"timestamp": "2026-04-16T23:18:38.020356", "event_type": "cli_output", "content": "---"}
+{"timestamp": "2026-04-16T23:18:38.020462", "event_type": "cli_output", "content": "## 诊断摘要"}
+{"timestamp": "2026-04-16T23:18:38.020853", "event_type": "cli_output", "content": "**核心问题：应用未接入 AVSession 媒体会话 + 未申请长时任务，导致后台音频播放被系统强制中断**"}
+{"timestamp": "2026-04-16T23:18:38.020981", "event_type": "cli_output", "content": "### 根因链路"}
+{"timestamp": "2026-04-16T23:18:38.021805", "event_type": "cli_output", "content": "1. **应用切到后台** → 系统检测到该应用未接入 AVSession 且未申请 `AUDIO_PLAYBACK` 长时任务 → **强制静音并冻结播放器** → 播放器进入 `error` 状态"}
+{"timestamp": "2026-04-16T23:18:38.039368", "event_type": "cli_output", "content": "2. 应用尝试恢复播放，**未调用 `reset()`** 就直接设置 `fdSrc` → 因为当前状态是 `error` 而非 `idle` → **级联错误 5400102 (Operate Not Permit)**"}
+{"timestamp": "2026-04-16T23:18:38.044453", "event_type": "cli_output", "content": "### 关键修复步骤"}
+{"timestamp": "2026-04-16T23:18:38.045546", "event_type": "cli_output", "content": "**修复 1（根本解决）：接入 AVSession + 长时任务**"}
+{"timestamp": "2026-04-16T23:18:38.045838", "event_type": "cli_output", "content": "- `module.json5` 声明 `ohos.permission.KEEP_BACKGROUND_RUNNING` 权限和 `audioPlayback` 后台模式"}
+{"timestamp": "2026-04-16T23:18:38.046490", "event_type": "cli_output", "content": "- 创建并激活 `AVSession`，保持会话在后台播放期间一直存活"}
+{"timestamp": "2026-04-16T23:18:38.046689", "event_type": "cli_output", "content": "- 使用 `backgroundTaskManager.startBackgroundRunning()` 申请 `AUDIO_PLAYBACK` 长时任务"}
+{"timestamp": "2026-04-16T23:18:38.048150", "event_type": "cli_output", "content": "**修复 2（状态机处理）：error 状态必须先 reset**"}
+{"timestamp": "2026-04-16T23:18:38.048617", "event_type": "cli_output", "content": "- 在 `stateChange` 回调中，当状态变为 `error` 时，先调用 `reset()` 回到 `idle`"}
+{"timestamp": "2026-04-16T23:18:38.049014", "event_type": "cli_output", "content": "- 等待 `idle` 状态后再设置新的数据源，重新走 `idle → initialized → prepared → playing` 流程"}
+{"timestamp": "2026-04-16T23:18:38.085665", "event_type": "result_from", "source": "file"}
+{"timestamp": "2026-04-16T23:18:38.086213", "event_type": "task_completed", "message": "任务执行完成"}

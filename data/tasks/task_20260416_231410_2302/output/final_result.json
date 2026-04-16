@@ -1,0 +1,165 @@
+{
+  "summary": "应用切到后台后音频播放被系统强制中断，播放器进入 error 状态，随后在未调用 reset() 的情况下尝试重新设置 fdSrc 导致级联错误 5400103/5400102",
+  "diagnostic_depth": "triage",
+  "module_identified": "multimedia_player_framework",
+  "clues": {
+    "error_codes": [
+      "5400103",
+      "5400102"
+    ],
+    "event_names": [],
+    "domains": [],
+    "call_stack_highlights": [
+      "VoiceListPlayer, Invoke avPlayer failed, code is 5400103, message is IO Error: unsupport interface, state=error",
+      "VoiceListPlayer, Invoke avPlayer failed, code is 5400102, message is Operate Not Permit: current state is not idle, unsupport set fd, state=error"
+    ],
+    "so_libraries": [
+      "libark_jsruntime.so",
+      "libace_napi.z.so",
+      "libmedia_soundpool.z.so"
+    ],
+    "modules": [
+      "multimedia_player_framework"
+    ],
+    "api_names": [
+      "avPlayer",
+      "VoiceListPlayer"
+    ],
+    "hilog_domain_ids": [
+      "00000"
+    ]
+  },
+  "knowledge_matches": [
+    {
+      "source": "error_codes.json",
+      "content": "5400103 (MSERR_EXT_API9_IO): IO 错误，包括文件读写失败、数据源 IO 异常等。由 MSERR_DATA_SOURCE_IO_ERROR 等映射而来。5400102 (MSERR_EXT_API9_INVALID_PARAMETER): 传入的参数不合法或操作不被允许。由 MSERR_INVALID_VAL 或 MSERR_INVALID_OPERATION 映射而来。"
+    },
+    {
+      "source": "common_issues.md",
+      "content": "错误码 5400102 (操作不被允许) / 状态机错误：常见错误操作：(3) 在 error 状态下未 reset 就重新播放。应始终监听 stateChange 事件，仅在合法状态下发起操作。"
+    },
+    {
+      "source": "common_issues.md",
+      "content": "错误码 5400103 (MSERR_EXT_API9_IO)：通用 IO 错误。FD 无效：fdSrc 传入的文件描述符已关闭或无效。"
+    },
+    {
+      "source": "troubleshooting.md",
+      "content": "正确的 AVPlayer 状态流转: idle → initialized(设置 url/fdSrc) → prepared → playing → paused → stopped → completed。error 状态需要 reset() 回到 idle 才能重新设置数据源。"
+    }
+  ],
+  "doc_references": [
+    {
+      "source": "AVPlayer 音频播放开发指导",
+      "path": "zh-cn/application-dev/media/media/using-avplayer-for-playback.md",
+      "relevant_content": "若要实现后台播放或熄屏播放，需要接入 AVSession（媒体会话）和申请长时任务，避免播放被系统强制中断。"
+    },
+    {
+      "source": "长时任务开发指导",
+      "path": "zh-cn/application-dev/task-management/continuous-task.md",
+      "relevant_content": "AUDIO_PLAYBACK（音视频播放）：当应用需要在后台播放媒体类型（流类型为 STREAM_USAGE_MUSIC、STREAM_USAGE_MOVIE 和 STREAM_USAGE_AUDIOBOOK）和游戏类型（流类型为 STREAM_USAGE_GAME）时，必须接入媒体会话服务（AVSession）并申请 AUDIO_PLAYBACK 类型长时任务。如果应用不满足上述接入规范，退至后台播放时会被系统静音并冻结，无法在后台正常播放。"
+    },
+    {
+      "source": "AVSession 概述",
+      "path": "zh-cn/application-dev/media/avsession/avsession-overview.md",
+      "relevant_content": "提供音频后台约束能力，音频接入 AVSession 后，可以进行后台音频播放。此功能需要同时申请长时任务。系统针对后台播放进行强制管控，当未接入 AVSession 的应用退到后台时，或接入 AVSession 的应用退到后台但无有效的 AVSession 实例时，将会被强制暂停音频播放。"
+    },
+    {
+      "source": "errorcode-media 文档",
+      "path": "zh-cn/application-dev/reference/apis-media-kit/arkts-apis-media-AVRecorder.md",
+      "relevant_content": "5400102: Operate not permit. 5400103: IO error."
+    },
+    {
+      "source": "AVPlayer 状态类型定义",
+      "path": "zh-cn/application-dev/reference/apis-media-kit/arkts-apis-media-t.md",
+      "relevant_content": "AVPlayerState = 'idle' | 'initialized' | 'prepared' | 'playing' | 'paused' | 'completed' | 'stopped' | 'released' | 'error'"
+    }
+  ],
+  "root_cause_candidates": [
+    {
+      "rank": 1,
+      "description": "应用未接入 AVSession 媒体会话且未申请 AUDIO_PLAYBACK 长时任务，导致切到后台后音频播放被系统强制静音并冻结/暂停，播放器进入 error 状态",
+      "diagnostic_confidence": "high",
+      "evidence": [
+        "官方文档明确要求：后台播放必须接入 AVSession 并申请 AUDIO_PLAYBACK 长时任务",
+        "文档明确说明：未接入 AVSession 的应用退到后台时将被强制暂停音频播放",
+        "用户描述：前台能一直连续播放，切到后台则不能正常播放 — 完全吻合系统后台管控行为",
+        "错误码 5400103 (IO Error: unsupport interface, state=error) 表明播放器因后台被冻结而进入 error 状态"
+      ],
+      "evidence_sources": [
+        {
+          "type": "documentation",
+          "path": "zh-cn/application-dev/media/media/using-avplayer-for-playback.md"
+        },
+        {
+          "type": "documentation",
+          "path": "zh-cn/application-dev/task-management/continuous-task.md"
+        },
+        {
+          "type": "documentation",
+          "path": "zh-cn/application-dev/media/avsession/avsession-overview.md"
+        },
+        {
+          "type": "knowledge_base",
+          "path": "data/knowledge/multimedia_player_framework/error_codes.json"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "description": "播放器进入 error 状态后，应用未调用 reset() 回到 idle 状态就尝试重新设置 fdSrc，导致级联错误 5400102 (Operate Not Permit)",
+      "diagnostic_confidence": "high",
+      "evidence": [
+        "错误消息 5400102 明确说 'current state is not idle, unsupport set fd' — 在非 idle 状态下设置 fdSrc",
+        "错误消息中 state=error 表示播放器当前处于 error 状态",
+        "知识库常见问题明确指出：'在 error 状态下未 reset 就重新播放'是常见错误操作",
+        "正确的状态流转应为 error → reset() → idle → set fdSrc → initialized → prepare → play"
+      ],
+      "evidence_sources": [
+        {
+          "type": "knowledge_base",
+          "path": "data/knowledge/multimedia_player_framework/common_issues.md"
+        },
+        {
+          "type": "knowledge_base",
+          "path": "data/knowledge/multimedia_player_framework/troubleshooting.md"
+        },
+        {
+          "type": "documentation",
+          "path": "zh-cn/application-dev/reference/apis-media-kit/arkts-apis-media-t.md"
+        }
+      ]
+    }
+  ],
+  "fix_suggestions": [
+    {
+      "for_candidate": 1,
+      "steps": [
+        "1. 在 module.json5 中声明长时任务权限和后台模式：在 requestPermissions 中添加 'ohos.permission.KEEP_BACKGROUND_RUNNING'，在 abilities 配置中添加 backgroundModes: ['audioPlayback']",
+        "2. 创建并激活 AVSession 媒体会话：使用 avSession.createAVSession() 创建会话，调用 session.activate() 激活，设置必要的媒体元数据（metadata）和播放状态（playbackState）",
+        "3. 在开始播放时申请 AUDIO_PLAYBACK 类型长时任务：使用 backgroundTaskManager.startBackgroundRunning() 申请，传入 wantAgent 和 BackgroundMode.AUDIO_PLAYBACK",
+        "4. 在播放停止/结束时取消长时任务：调用 backgroundTaskManager.stopBackgroundRunning()",
+        "5. 确保 AVSession 实例在后台播放业务活动期间一直存在，避免被系统回收释放",
+        "6. 确保 AVSession 与 AVPlayer 播放状态同步更新，包括播放/暂停/停止等状态变化"
+      ],
+      "references": [
+        "zh-cn/application-dev/media/avsession/avsession-access-scene.md",
+        "zh-cn/application-dev/media/avsession/avsession-background-scene.md",
+        "zh-cn/application-dev/task-management/continuous-task.md",
+        "zh-cn/application-dev/media/media/using-avplayer-for-playback.md"
+      ]
+    },
+    {
+      "for_candidate": 2,
+      "steps": [
+        "1. 监听 AVPlayer 的 stateChange 事件，在 error 状态回调中先调用 reset() 将播放器重置回 idle 状态",
+        "2. 等待 stateChange 回调确认状态变为 idle 后，再设置新的数据源（url 或 fdSrc）",
+        "3. 在 error 事件回调中不要直接重新设置 fdSrc 或 url，必须先 reset",
+        "4. 建议的错误恢复代码模式：error 状态 → reset() → idle → set fdSrc → initialized → prepare → playing"
+      ],
+      "references": [
+        "zh-cn/application-dev/media/media/using-avplayer-for-playback.md",
+        "data/knowledge/multimedia_player_framework/troubleshooting.md"
+      ]
+    }
+  ]
+}

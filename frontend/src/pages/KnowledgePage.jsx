@@ -22,14 +22,21 @@ export default function KnowledgePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
-  useEffect(() => { loadModules() }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/knowledge')
+      .then(r => r.json())
+      .then(data => { if (!cancelled) { setModules(data); setLoading(false) } })
+      .catch(() => { if (!cancelled) { setLoading(false) } })
+    return () => { cancelled = true }
+  }, [])
 
   async function loadModules() {
     setLoading(true)
     try {
       const res = await fetch('/api/knowledge')
       setModules(await res.json())
-    } catch {}
+    } catch { /* network error, skip */ }
     setLoading(false)
   }
 
@@ -52,7 +59,7 @@ export default function KnowledgePage() {
       if (data.files?.length > 0) {
         loadFile(name, data.files[0])
       }
-    } catch {}
+    } catch { /* network error, skip */ }
   }
 
   async function loadFile(moduleName, filename) {
@@ -64,7 +71,7 @@ export default function KnowledgePage() {
       const res = await fetch(`/api/knowledge/${moduleName}/files/${filename}`)
       const data = await res.json()
       setFileContent(data.content || '')
-    } catch {}
+    } catch { /* network error, skip */ }
     setFileLoading(false)
   }
 
@@ -104,7 +111,7 @@ export default function KnowledgePage() {
       })
       selectModule(selectedModule)
       loadModules()
-    } catch {}
+    } catch { /* network error, skip */ }
   }
 
   function startEditing() {

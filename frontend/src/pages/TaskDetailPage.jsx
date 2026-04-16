@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, XCircle, AlertTriangle, Loader2, Terminal, Database, CheckSquare, RotateCcw } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, XCircle, AlertTriangle, Loader2, Terminal, Database, CheckSquare, RotateCcw, ChevronDown, ChevronRight, FileText, Code, AlignLeft } from 'lucide-react'
+import { DarkMarkdownRenderer } from '../components/MarkdownRenderer'
 
 const statusConfig = {
   created: { label: '已创建', color: 'text-blue-400', bg: 'bg-blue-500/10' },
@@ -22,13 +23,14 @@ export default function TaskDetailPage() {
   const [cancelling, setCancelling] = useState(false)
   const [retrying, setRetrying] = useState(false)
   const [pid, setPid] = useState(null)
+  const [expandedSections, setExpandedSections] = useState({ description: true, log: false, code: false })
   const eventSourceRef = useRef(null)
   const stepsRef = useRef(null)
 
   useEffect(() => {
     loadTask()
     return () => { if (eventSourceRef.current) eventSourceRef.current.close() }
-  }, [taskId])
+  }, [taskId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function loadTask() {
     try {
@@ -87,14 +89,14 @@ export default function TaskDetailPage() {
         if (data.event_type === 'task_started') setStatus('running')
         if (data.event_type === 'cli_started' && data.pid) setPid(data.pid)
         setTimeout(() => { stepsRef.current?.scrollTo(0, stepsRef.current.scrollHeight) }, 50)
-      } catch {}
+      } catch { /* parse error, skip */ }
     }
 
     es.addEventListener('done', (e) => {
       try {
         const data = JSON.parse(e.data)
         setStatus(data.status)
-      } catch {}
+      } catch { /* parse error, skip */ }
       es.close()
       eventSourceRef.current = null
       loadResult()
@@ -229,6 +231,73 @@ export default function TaskDetailPage() {
         )}
       </div>
 
+      {/* 用户输入信息 */}
+      {task?.input && !isKnowledgeBuild && (
+        <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800 bg-slate-900/50">
+            <FileText className="w-4 h-4 text-slate-400" />
+            <span className="text-sm font-medium text-slate-300">问题信息</span>
+          </div>
+          <div className="p-4 space-y-3">
+            {/* 问题描述 - 默认展开 */}
+            {task.input.problem_description && (
+              <div>
+                <button
+                  onClick={() => setExpandedSections(s => ({ ...s, description: !s.description }))}
+                  className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-200 transition-colors mb-1.5"
+                >
+                  {expandedSections.description ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                  <AlignLeft className="w-3.5 h-3.5" />
+                  <span>问题描述</span>
+                </button>
+                {expandedSections.description && (
+                  <div className="bg-slate-950/50 rounded-lg p-3 border border-slate-800">
+                    <p className="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">{task.input.problem_description}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {/* 日志内容 - 默认折叠 */}
+            {task.input.log_content && (
+              <div>
+                <button
+                  onClick={() => setExpandedSections(s => ({ ...s, log: !s.log }))}
+                  className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-200 transition-colors mb-1.5"
+                >
+                  {expandedSections.log ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                  <Terminal className="w-3.5 h-3.5" />
+                  <span>日志内容</span>
+                  <span className="text-xs text-slate-600">({task.input.log_content.length} 字符)</span>
+                </button>
+                {expandedSections.log && (
+                  <div className="bg-slate-950/50 rounded-lg p-3 border border-slate-800 max-h-[300px] overflow-y-auto">
+                    <pre className="text-xs text-slate-400 whitespace-pre-wrap font-mono">{task.input.log_content}</pre>
+                  </div>
+                )}
+              </div>
+            )}
+            {/* 代码片段 - 默认折叠 */}
+            {task.input.code_snippet && (
+              <div>
+                <button
+                  onClick={() => setExpandedSections(s => ({ ...s, code: !s.code }))}
+                  className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-200 transition-colors mb-1.5"
+                >
+                  {expandedSections.code ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                  <Code className="w-3.5 h-3.5" />
+                  <span>代码片段</span>
+                </button>
+                {expandedSections.code && (
+                  <div className="bg-slate-950/50 rounded-lg p-3 border border-slate-800 max-h-[300px] overflow-y-auto">
+                    <pre className="text-xs text-slate-400 whitespace-pre-wrap font-mono">{task.input.code_snippet}</pre>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* 分析过程 - 终端风格 */}
       <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
         <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800 bg-slate-900/50">
@@ -277,9 +346,54 @@ export default function TaskDetailPage() {
           <h2 className="text-base font-semibold text-slate-200">{isKnowledgeBuild ? '构建结果' : '诊断结果'}</h2>
 
           {/* 摘要 */}
-          <div className="bg-cyan-500/5 border border-cyan-500/20 rounded-lg p-4">
-            <p className="text-sm text-cyan-200">{result.summary || '分析完成'}</p>
-          </div>
+          {(result.summary || result.module_identified) && (
+            <div className="bg-cyan-500/5 border border-cyan-500/20 rounded-lg p-4 space-y-2">
+              {result.summary && (
+                <div className="text-sm text-cyan-200">
+                  <DarkMarkdownRenderer content={result.summary} />
+                </div>
+              )}
+              {result.module_identified && result.module_identified !== '未识别' && (
+                <p className="text-xs text-slate-500">
+                  模块: <span className="text-teal-400 font-mono">{result.module_identified}</span>
+                  {result.diagnostic_depth && (
+                    <span className="ml-2">诊断深度: <span className="text-slate-400">{result.diagnostic_depth === 'triage' ? '分诊' : '深潜'}</span></span>
+                  )}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* 知识库匹配 */}
+          {result.knowledge_matches?.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-slate-300 mb-3">知识库匹配</h3>
+              <div className="space-y-2">
+                {result.knowledge_matches.map((m, i) => (
+                  <div key={i} className="bg-teal-500/5 border border-teal-500/10 rounded-lg p-3">
+                    <p className="text-xs text-teal-400 font-mono mb-1">{m.source}</p>
+                    <p className="text-sm text-slate-300">{m.content}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 文档参考 */}
+          {result.doc_references?.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-slate-300 mb-3">文档参考</h3>
+              <div className="space-y-2">
+                {result.doc_references.map((d, i) => (
+                  <div key={i} className="bg-cyan-500/5 border border-cyan-500/10 rounded-lg p-3">
+                    <p className="text-xs text-cyan-400 font-medium mb-1">{d.source}</p>
+                    {d.path && <p className="text-xs text-slate-500 font-mono mb-1">{d.path}</p>}
+                    {d.relevant_content && <p className="text-sm text-slate-300">{d.relevant_content}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* 根因候选 */}
           {result.root_cause_candidates?.length > 0 && (
@@ -292,14 +406,41 @@ export default function TaskDetailPage() {
                       <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-cyan-500 text-white text-xs font-bold shrink-0">
                         {c.rank}
                       </span>
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 space-y-2">
                         <p className="text-sm text-slate-200 font-medium">{c.description}</p>
+                        {c.diagnostic_confidence && (
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                            c.diagnostic_confidence === 'high' ? 'bg-emerald-500/10 text-emerald-400' :
+                            c.diagnostic_confidence === 'medium' ? 'bg-amber-500/10 text-amber-400' :
+                            'bg-red-500/10 text-red-400'
+                          }`}>
+                            {c.diagnostic_confidence === 'high' ? '高置信度' : c.diagnostic_confidence === 'medium' ? '中置信度' : '低置信度'}
+                          </span>
+                        )}
                         {c.evidence?.length > 0 && (
                           <ul className="mt-2 space-y-1">
                             {c.evidence.map((e, i) => (
                               <li key={i} className="text-xs text-slate-400 pl-1">• {e}</li>
                             ))}
                           </ul>
+                        )}
+                        {c.evidence_sources?.length > 0 && (
+                          <details className="mt-2">
+                            <summary className="text-xs text-slate-500 cursor-pointer hover:text-slate-300 transition-colors">证据来源 ({c.evidence_sources.length})</summary>
+                            <div className="mt-2 space-y-1">
+                              {c.evidence_sources.map((s, i) => (
+                                <div key={i} className="flex items-center gap-2 text-xs">
+                                  <span className={`px-1.5 py-0.5 rounded ${
+                                    s.type === 'knowledge_base' ? 'bg-teal-500/10 text-teal-400' :
+                                    s.type === 'documentation' ? 'bg-cyan-500/10 text-cyan-400' :
+                                    s.type === 'code' ? 'bg-amber-500/10 text-amber-400' :
+                                    'bg-slate-500/10 text-slate-400'
+                                  }`}>{s.type}</span>
+                                  <span className="font-mono text-slate-500">{s.path}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </details>
                         )}
                       </div>
                     </div>
@@ -320,10 +461,18 @@ export default function TaskDetailPage() {
                     <div className="space-y-1">
                       {f.steps?.map((s, i) => (
                         <div key={i} className="bg-emerald-500/5 border border-emerald-500/10 rounded px-3 py-2 text-sm text-slate-300">
-                          {i + 1}. {s}
+                          <DarkMarkdownRenderer content={`${i + 1}. ${s}`} />
                         </div>
                       ))}
                     </div>
+                    {f.references?.length > 0 && (
+                      <div className="mt-2 pl-1">
+                        <p className="text-xs text-slate-500 mb-1">参考文档:</p>
+                        {f.references.map((r, i) => (
+                          <p key={i} className="text-xs font-mono text-slate-500 pl-2">{r}</p>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -332,8 +481,8 @@ export default function TaskDetailPage() {
 
           {/* 原始输出（fallback） */}
           {!result.root_cause_candidates?.length && result.raw_output && (
-            <div className="border border-slate-800 rounded-lg p-4 max-h-[400px] overflow-y-auto">
-              <pre className="text-xs text-slate-400 whitespace-pre-wrap">{result.raw_output}</pre>
+            <div className="border border-slate-800 rounded-lg p-4 max-h-[600px] overflow-y-auto">
+              <DarkMarkdownRenderer content={result.raw_output} />
             </div>
           )}
         </div>

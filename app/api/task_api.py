@@ -286,6 +286,12 @@ async def api_retry_task(task_id: str):
 
 def _build_prompt(task_data: dict, settings) -> str:
     """构建发送给 Claude 的 prompt。"""
+    from app.manager.workspace_manager import get_task_dir
+
+    task_id = task_data.get("task_id", "")
+    task_dir = get_task_dir(task_id)
+    output_dir = str((task_dir / "output").resolve()) if task_dir else ""
+
     task_type = task_data.get("task_type", "problem_locating")
     inp = task_data.get("input", {})
 
@@ -297,6 +303,7 @@ def _build_prompt(task_data: dict, settings) -> str:
             f"docs_repo_root={settings.paths.docs_repo_root}",
             f"sdk_repo_root={settings.paths.sdk_repo_root}",
             f"knowledge_root={settings.paths.knowledge_root}",
+            f"output_dir={output_dir}",
         ]
     else:
         parts = [
@@ -308,6 +315,7 @@ def _build_prompt(task_data: dict, settings) -> str:
             f"docs_repo_root={settings.paths.docs_repo_root}",
             f"sdk_repo_root={settings.paths.sdk_repo_root}",
             f"knowledge_root={settings.paths.knowledge_root}",
+            f"output_dir={output_dir}",
         ]
     return "\n".join(parts)
 

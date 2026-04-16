@@ -23,3 +23,6 @@ logs/
 
 # plugin
 .claude/temp
+
+# other
+.context/

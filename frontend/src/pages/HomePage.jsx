@@ -31,14 +31,14 @@ export default function HomePage() {
     try {
       const res = await fetch('/api/tasks')
       setTasks(await res.json())
-    } catch {}
+    } catch { /* network error, skip */ }
   }
 
   async function loadModules() {
     try {
       const res = await fetch('/api/tasks/modules/list')
       setModules(await res.json())
-    } catch {}
+    } catch { /* network error, skip */ }
   }
 
   async function handleSubmit(e) {
