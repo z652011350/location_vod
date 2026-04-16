@@ -160,7 +160,7 @@ export default function FileContentViewer({
         >
           编辑
         </button>
-        <pre className="text-sm text-slate-300 font-mono whitespace-pre-wrap bg-slate-950 rounded-lg p-4 max-h-[500px] overflow-y-auto border border-slate-800">
+        <pre className="text-sm text-slate-300 font-mono whitespace-pre-wrap bg-slate-950 rounded-lg p-4 overflow-y-auto border border-slate-800">
           {formatted}
         </pre>
       </div>
@@ -176,7 +176,7 @@ export default function FileContentViewer({
       >
         编辑
       </button>
-      <div className="bg-white rounded-lg p-6 max-h-[600px] overflow-y-auto border border-gray-200 text-sm">
+      <div className="bg-white rounded-lg p-6 overflow-y-auto border border-gray-200 text-sm">
         <MarkdownRenderer content={content} />
       </div>
     </div>

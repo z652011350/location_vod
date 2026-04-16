@@ -117,7 +117,7 @@ export default function KnowledgePage() {
   const BadgeIcon = badge?.icon || Sparkles
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-[calc(100vh-80px)]">
       {/* 左侧：模块列表 */}
       <div className="lg:col-span-1 bg-slate-900 rounded-xl border border-slate-800 p-4 flex flex-col">
         <div className="flex items-center justify-between mb-3">
@@ -154,7 +154,7 @@ export default function KnowledgePage() {
         ) : filteredModules.length === 0 ? (
           <div className="text-center text-slate-600 py-8 text-sm">无匹配模块</div>
         ) : (
-          <div className="space-y-1 overflow-y-auto max-h-[calc(100vh-280px)]">
+          <div className="space-y-1 overflow-y-auto flex-1 min-h-0">
             {filteredModules.map(m => {
               const mb = statusBadge[m.status] || statusBadge.ai_native
               const Mi = mb.icon
@@ -186,14 +186,14 @@ export default function KnowledgePage() {
       </div>
 
       {/* 右侧：详情面板 */}
-      <div className="lg:col-span-3">
+      <div className="lg:col-span-3 flex flex-col">
         {!selectedModule ? (
           <div className="bg-slate-900 rounded-xl border border-slate-800 p-20 text-center text-slate-600">
             <FileText className="w-10 h-10 mx-auto mb-3 text-slate-700" />
             <p>选择左侧模块查看详情</p>
           </div>
         ) : (
-          <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+          <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden flex-1 flex flex-col">
             {/* 模块头部 */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800">
               <div className="flex items-center gap-3">
@@ -252,7 +252,7 @@ export default function KnowledgePage() {
 
             {/* 文件内容 */}
             {moduleData?.files?.length > 0 && (
-              <div className="p-4">
+              <div className="p-4 flex-1 min-h-0 overflow-auto">
                 {fileLoading ? (
                   <div className="flex items-center justify-center py-16 text-slate-500">
                     <Loader2 className="w-5 h-5 animate-spin mr-2" />
