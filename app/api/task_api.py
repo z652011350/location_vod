@@ -21,7 +21,8 @@ from app.manager.task_manager import (
     get_task_result,
     RETRYABLE_STATES,
 )
-from app.store.event_store import read_events
+from app.store.event_store import read_events, append_event
+from app.store.result_store import read_result
 from app.core.config import get_settings
 
 logger = logging.getLogger(__name__)
@@ -238,7 +239,13 @@ async def _execute_and_finalize(task_id: str, task_data: dict, prompt: str):
     """执行 CLI 并更新任务状态。作为独立 asyncio Task 运行，不依赖 SSE 连接存活。"""
     try:
         lines = await run_with_timeout(task_id, prompt)
-        result = _parse_result(lines)
+        # 优先读取 skill 通过 Write 工具写入的 final_result.json
+        result = _read_result_file(task_id)
+        if result is None:
+            result = _parse_result(lines)
+            append_event(task_id, "result_from", {"source": "stdout"})
+        else:
+            append_event(task_id, "result_from", {"source": "file"})
         # 知识库构建任务完成后：验证知识文件并初始化 meta.json
         if task_data.get("task_type") == TaskType.KNOWLEDGE_BUILDING.value:
             _verify_and_init_knowledge(task_data, result)
@@ -303,6 +310,17 @@ def _build_prompt(task_data: dict, settings) -> str:
             f"knowledge_root={settings.paths.knowledge_root}",
         ]
     return "\n".join(parts)
+
+
+def _read_result_file(task_id: str) -> Optional[dict]:
+    """尝试从磁盘读取 skill 写入的 final_result.json。成功返回 dict，否则返回 None。"""
+    try:
+        result = read_result(task_id)
+        if result is not None and isinstance(result, dict):
+            return result
+    except (json.JSONDecodeError, OSError) as e:
+        logger.debug(f"读取 final_result.json 失败，将使用 stdout 解析: {e}")
+    return None
 
 
 def _parse_result(lines: list[str]) -> dict:
