@@ -184,18 +184,18 @@
 
 用于定位文档仓中的错误码文档和开发指南。模块名到文档仓路径的映射需要手动维护，不可通过命名规则推导。
 
-| 模块名 | errorcode 文件路径（docs_repo_root 相对路径） | 开发指南目录（docs_repo_root 相对路径） |
-|--------|---------------------------------------------|--------------------------------------|
-| multimedia_av_session | zh-cn/application-dev/reference/apis-avsession-kit/errorcode-avsession.md | zh-cn/application-dev/media/avsession/ |
-| multimedia_player_framework | zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md | zh-cn/application-dev/media/media/ |
-| multimedia_audio_framework | zh-cn/application-dev/reference/apis-audio-kit/errorcode-audio.md | zh-cn/application-dev/media/audio/ |
-| multimedia_camera_framework | zh-cn/application-dev/reference/apis-camera-kit/errorcode-camera.md | zh-cn/application-dev/media/camera/ |
-| ability_ability_runtime | zh-cn/application-dev/reference/apis-ability-kit/errorcode-ability.md | zh-cn/application-dev/application-models/ |
-| base_location | zh-cn/application-dev/reference/apis-location-kit/errorcode-geoLocationManager.md | zh-cn/application-dev/device/location/ |
-| communication_bluetooth | zh-cn/application-dev/reference/apis-connectivity-kit/errorcode-nfc.md（部分） | zh-cn/application-dev/connectivity/bluetooth/ |
-| communication_wifi | （散布在 connectivity kit 下） | zh-cn/application-dev/connectivity/wlan/ |
-| window_window_manager | zh-cn/application-dev/reference/apis-arkui/errorcode-bindSheet.md（部分） | zh-cn/application-dev/application-models/ |
-| telephony_core_service | zh-cn/application-dev/reference/apis-telephony-kit/errorcode-telephony.md | zh-cn/application-dev/device/telephony/ |
+| 模块名 | errorcode 文件路径（docs_repo_root 相对路径） | 开发指南目录（docs_repo_root 相对路径） | 代码仓路径（code_repo_root 相对路径） |
+|--------|---------------------------------------------|--------------------------------------|-------------------------------------|
+| multimedia_av_session | zh-cn/application-dev/reference/apis-avsession-kit/errorcode-avsession.md | zh-cn/application-dev/media/avsession/ | /multimedia_av_session |
+| multimedia_player_framework | zh-cn/application-dev/reference/apis-media-kit/errorcode-media.md | zh-cn/application-dev/media/media/ | /multimedia_player_framework |
+| multimedia_audio_framework | zh-cn/application-dev/reference/apis-audio-kit/errorcode-audio.md | zh-cn/application-dev/media/audio/ | /multimedia_audio_framework |
+| multimedia_camera_framework | zh-cn/application-dev/reference/apis-camera-kit/errorcode-camera.md | zh-cn/application-dev/media/camera/ | /multimedia_camera_framework |
+| ability_ability_runtime | zh-cn/application-dev/reference/apis-ability-kit/errorcode-ability.md | zh-cn/application-dev/application-models/ | /ability_ability_runtime |
+| base_location | zh-cn/application-dev/reference/apis-location-kit/errorcode-geoLocationManager.md | zh-cn/application-dev/device/location/ | /base_location |
+| communication_bluetooth | zh-cn/application-dev/reference/apis-connectivity-kit/errorcode-nfc.md（部分） | zh-cn/application-dev/connectivity/bluetooth/ | /communication_bluetooth |
+| communication_wifi | （散布在 connectivity kit 下） | zh-cn/application-dev/connectivity/wlan/ | /communication_wifi |
+| window_window_manager | zh-cn/application-dev/reference/apis-arkui/errorcode-bindSheet.md（部分） | zh-cn/application-dev/application-models/ | /window_window_manager |
+| telephony_core_service | zh-cn/application-dev/reference/apis-telephony-kit/errorcode-telephony.md | zh-cn/application-dev/device/telephony/ | /telephony_core_service |
 
 **Grep 搜索兜底策略：**
 

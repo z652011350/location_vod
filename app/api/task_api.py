@@ -41,18 +41,14 @@ TERMINAL_STATES = {
 
 @router.get("/modules/list")
 async def api_list_modules():
-    """列出 code_repo_root 下可用的模块目录，供知识库构建选择。"""
-    from pathlib import Path
+    """列出 code_repo_root 下可用的模块目录，供知识库构建选择。
+
+    优先使用 component_mapping.csv 映射表，不存在时回退到顶级目录扫描。
+    """
+    from app.core.component_mapping import get_component_list
 
     settings = get_settings()
-    code_root = Path(settings.paths.code_repo_root)
-    if not code_root.exists():
-        return []
-    modules = []
-    for d in sorted(code_root.iterdir()):
-        if d.is_dir() and not d.name.startswith("."):
-            modules.append({"name": d.name, "path": str(d)})
-    return modules
+    return get_component_list(settings.paths.code_repo_root)
 
 
 # --- Request/Response Models ---

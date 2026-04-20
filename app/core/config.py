@@ -17,6 +17,7 @@ class PathsConfig(BaseModel):
     code_repo_root: str = ""
     docs_repo_root: str = ""
     sdk_repo_root: str = ""
+    component_mapping_file: str = ""
 
 
 class AgentConfig(BaseModel):

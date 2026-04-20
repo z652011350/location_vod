@@ -1,7 +1,7 @@
 {
-  "module_name": "multimedia_av_session",
+  "module_name": "multimedia_video_processing_engine",
   "status": "ai_native",
-  "built_at": "2026-04-20T16:46:22.174283",
+  "built_at": "2026-04-17T20:16:54.455719",
   "files": [
     "api_chain.json",
     "api_reference.md",

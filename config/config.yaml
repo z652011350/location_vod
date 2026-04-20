@@ -9,6 +9,7 @@ paths:
   code_repo_root: "/Users/spongbob/for_guance/api_dfx/DataBases"
   docs_repo_root: "/Users/spongbob/for_guance/api_dfx_2.0/data/docs"
   sdk_repo_root: "/Users/spongbob/for_guance/api_dfx/api"
+  component_mapping_file: "config/component_mapping.csv"
 
 agent:
   command: "claude"

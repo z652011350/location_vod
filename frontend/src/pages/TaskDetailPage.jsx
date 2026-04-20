@@ -458,12 +458,11 @@ export default function TaskDetailPage() {
                 {result.fix_suggestions.map(f => (
                   <div key={f.for_candidate}>
                     <p className="text-xs text-slate-500 mb-2">针对候选 #{f.for_candidate}</p>
-                    <div className="space-y-1">
-                      {f.steps?.map((s, i) => (
-                        <div key={i} className="bg-emerald-500/5 border border-emerald-500/10 rounded px-3 py-2 text-sm text-slate-300">
-                          <DarkMarkdownRenderer content={`${i + 1}. ${s}`} />
-                        </div>
-                      ))}
+                    <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-lg p-4">
+                      <DarkMarkdownRenderer content={f.steps?.map((s, i) => {
+                        const text = s.replace(/^\d+\.\s*/, '')
+                        return `${i + 1}. ${text}`
+                      }).join('\n') || ''} />
                     </div>
                     {f.references?.length > 0 && (
                       <div className="mt-2 pl-1">

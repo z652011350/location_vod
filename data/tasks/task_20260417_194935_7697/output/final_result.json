@@ -1,0 +1,4 @@
+{
+  "summary": "分析完成（无法解析结构化结果）",
+  "raw_output": "## 知识库构建完成\n`multimedia_video_processing_engine` 模块知识库已成功构建，8 个文件已写入 `data/knowledge/multimedia_video_processing_engine/`：\n**结构化数据文件（供 problem-locator Agent 查询）**：\n| 文件 | 大小 | 内容 |\n|------|------|------|\n| `overview.md` | 5.8KB | 模块概览、目录结构、38个核心文件说明 |\n| `error_codes.json` | 15.7KB | 42条错误码（图像2920xxxx + 视频2921xxxx + JS API + 内部算法） |\n| `api_chain.json` | 20.5KB | 36条API链路（JS 7条 + 图像CAPI 11条 + 视频CAPI 15条） |\n| `common_issues.md` | 8.9KB | 6大类18个常见问题诊断指南 |\n**Wiki 文档（供人类开发者阅读）**：\n| 文件 | 大小 | 内容 |\n|------|------|------|\n| `architecture.md` | 16.7KB | 5层架构总览 + Mermaid flowchart |\n| `call_chains.md` | 22.5KB | 29条API调用链 + 3个Mermaid序列图 |\n| `api_reference.md` | 31.2KB | JS/C/视频全部接口参考手册 |\n| `troubleshooting.md` | 15.0KB | 9个故障场景排查指南 + 日志关键字 |"
+}

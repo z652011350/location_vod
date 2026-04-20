@@ -48,37 +48,44 @@ def list_modules() -> list[dict]:
     results = []
     for d in sorted(root.iterdir()):
         if d.is_dir() and MODULE_NAME_PATTERN.match(d.name):
+            # 始终从磁盘扫描实际文件
+            files = sorted(f.name for f in d.iterdir() if f.is_file() and f.name != "meta.json")
             meta = _read_meta(d.name)
             if meta:
+                meta["files"] = files
                 results.append(meta)
             else:
-                # 无 meta.json 时扫描实际文件
-                files = [f.name for f in d.iterdir() if f.is_file() and f.name != "meta.json"]
                 if files:
                     results.append({
                         "module_name": d.name,
                         "status": "ai_native",
                         "built_at": None,
-                        "files": sorted(files),
+                        "files": files,
                     })
     return results
 
 
 def get_module_meta(module_name: str) -> Optional[dict]:
-    """获取模块元数据。"""
+    """获取模块元数据。
+
+    始终从磁盘扫描实际文件列表（而非使用 meta.json 缓存），
+    确保手动添加到目录的文件也能被前端看到。
+    """
     module_path = _resolve_module_path(module_name)
     if not module_path.exists():
         return None
+    # 从磁盘扫描实际文件列表
+    files = sorted(f.name for f in module_path.iterdir() if f.is_file() and f.name != "meta.json")
     meta = _read_meta(module_name)
     if meta:
+        # 使用 meta.json 中的状态和元数据，但文件列表始终从磁盘获取
+        meta["files"] = files
         return meta
-    # 无 meta.json 时从文件推断
-    files = [f.name for f in module_path.iterdir() if f.is_file() and f.name != "meta.json"]
     return {
         "module_name": module_name,
         "status": "ai_native",
         "built_at": None,
-        "files": sorted(files),
+        "files": files,
     }
 
 
@@ -147,6 +154,36 @@ def is_agent_running() -> bool:
         t.get("task_type") == "knowledge_building" and t.get("status") == "running"
         for t in tasks
     )
+
+
+def is_any_task_running() -> bool:
+    """检查是否有任何任务正在运行（包括知识库构建和问题定位）。"""
+    from app.store.task_store import list_tasks
+    tasks = list_tasks()
+    return any(t.get("status") == "running" for t in tasks)
+
+
+def create_knowledge_file(module_name: str, filename: str, content: str) -> dict:
+    """创建新的知识文件并刷新 meta.json。
+
+    Args:
+        module_name: 模块名
+        filename: 文件名（必须符合 FILENAME_PATTERN）
+        content: 文件内容
+
+    Returns:
+        更新后的 meta.json 内容
+    """
+    module_path = _resolve_module_path(module_name)
+    if not module_path.exists():
+        raise FileNotFoundError(f"模块不存在: {module_name}")
+
+    file_path = _resolve_file_path(module_name, filename)
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+    # 刷新 meta.json
+    return init_module_meta(module_name)
 
 
 def _read_meta(module_name: str) -> Optional[dict]:

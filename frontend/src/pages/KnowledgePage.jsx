@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { BookOpen, CheckCircle, Edit3, Sparkles, RefreshCw, Loader2, Search, AlertCircle, FileText, FolderX } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { BookOpen, CheckCircle, Edit3, Sparkles, RefreshCw, Loader2, Search, AlertCircle, FileText, FolderX, Plus, Upload, FilePlus, X } from 'lucide-react'
 import FileContentViewer from '../components/FileContentViewer'
 
 const statusBadge = {
@@ -21,6 +21,23 @@ export default function KnowledgePage() {
   const [fileLoading, setFileLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
+  const [showAddMenu, setShowAddMenu] = useState(false)
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [newFileName, setNewFileName] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef(null)
+  const addMenuRef = useRef(null)
+
+  // 点击外部关闭添加菜单
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (addMenuRef.current && !addMenuRef.current.contains(e.target)) {
+        setShowAddMenu(false)
+      }
+    }
+    if (showAddMenu) document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showAddMenu])
 
   useEffect(() => {
     let cancelled = false
@@ -44,7 +61,7 @@ export default function KnowledgePage() {
     m.module_name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const isAgentRunning = moduleData?.status === 'ai_native' && moduleData?.is_building
+  const isAgentRunning = moduleData?.is_running === true
 
   async function selectModule(name) {
     setSelectedModule(name)
@@ -118,6 +135,58 @@ export default function KnowledgePage() {
     setEditContent(fileContent)
     setEditing(true)
     setErrorMsg('')
+  }
+
+  async function handleFileUpload(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    setErrorMsg('')
+    setShowAddMenu(false)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch(`/api/knowledge/${selectedModule}/files`, {
+        method: 'POST',
+        body: formData,
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.detail || '上传失败')
+      }
+      selectModule(selectedModule)
+    } catch (err) {
+      setErrorMsg('上传失败: ' + err.message)
+    }
+    setUploading(false)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  async function handleCreateTextFile() {
+    if (!newFileName.trim()) return
+    setUploading(true)
+    setErrorMsg('')
+    try {
+      const res = await fetch(`/api/knowledge/${selectedModule}/files/text`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: newFileName.trim(), content: '' }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.detail || '创建失败')
+      }
+      setShowCreateDialog(false)
+      setNewFileName('')
+      await selectModule(selectedModule)
+      // 自动选中新创建的文件并进入编辑模式
+      setActiveFile(newFileName.trim())
+      setEditContent('')
+      setEditing(true)
+    } catch (err) {
+      setErrorMsg('创建失败: ' + err.message)
+    }
+    setUploading(false)
   }
 
   const badge = moduleData ? statusBadge[moduleData.status] || statusBadge.ai_native : null
@@ -200,7 +269,10 @@ export default function KnowledgePage() {
             <p>选择左侧模块查看详情</p>
           </div>
         ) : (
-          <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden flex-1 flex flex-col">
+          <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden flex-1 flex flex-col relative">
+            {/* 隐藏的文件输入，始终挂载以保证 ref 有效 */}
+            <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileUpload} />
+
             {/* 模块头部 */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800">
               <div className="flex items-center gap-3">
@@ -235,25 +307,102 @@ export default function KnowledgePage() {
 
             {/* 文件 Tab */}
             {moduleData?.files?.length > 0 ? (
-              <div className="flex border-b border-slate-800 overflow-x-auto scrollbar-thin">
-                {moduleData.files.map(f => (
-                  <button
-                    key={f}
-                    onClick={() => loadFile(selectedModule, f)}
-                    className={`px-4 py-2 text-xs font-medium whitespace-nowrap transition-colors shrink-0 ${
-                      activeFile === f
-                        ? 'text-cyan-400 border-b-2 border-cyan-400 bg-cyan-500/5'
-                        : 'text-slate-500 hover:text-slate-300'
-                    }`}
-                  >
-                    {f}
-                  </button>
-                ))}
+              <div className="flex border-b border-slate-800 items-center">
+                <div className="flex overflow-x-auto flex-1 scrollbar-thin">
+                  {moduleData.files.map(f => (
+                    <button
+                      key={f}
+                      onClick={() => loadFile(selectedModule, f)}
+                      className={`px-4 py-2 text-xs font-medium whitespace-nowrap transition-colors shrink-0 ${
+                        activeFile === f
+                          ? 'text-cyan-400 border-b-2 border-cyan-400 bg-cyan-500/5'
+                          : 'text-slate-500 hover:text-slate-300'
+                      }`}
+                    >
+                      {f}
+                    </button>
+                  ))}
+                </div>
+                {!isAgentRunning && (
+                  <div className="relative shrink-0" ref={addMenuRef}>
+                    <button
+                      onClick={() => setShowAddMenu(!showAddMenu)}
+                      disabled={uploading}
+                      className="px-2 py-1 text-slate-500 hover:text-cyan-400 transition-colors disabled:opacity-50"
+                      title="添加文件"
+                    >
+                      {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    </button>
+                    {showAddMenu && (
+                      <div className="absolute right-0 top-full mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-50 py-1 min-w-[140px]">
+                        <button
+                          onClick={() => { setShowAddMenu(false); fileInputRef.current?.click() }}
+                          className="flex items-center gap-2 w-full px-3 py-2 text-xs text-slate-300 hover:bg-slate-700 transition-colors"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          上传文件
+                        </button>
+                        <button
+                          onClick={() => { setShowAddMenu(false); setShowCreateDialog(true) }}
+                          className="flex items-center gap-2 w-full px-3 py-2 text-xs text-slate-300 hover:bg-slate-700 transition-colors"
+                        >
+                          <FilePlus className="w-3.5 h-3.5" />
+                          新建文本文件
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="px-5 py-8 text-center text-slate-600 text-sm border-b border-slate-800">
                 <FolderX className="w-6 h-6 mx-auto mb-2 text-slate-700" />
                 该模块暂无知识文件
+                {!isAgentRunning && (
+                  <div className="flex items-center justify-center gap-3 mt-3">
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      上传文件
+                    </button>
+                    <button
+                      onClick={() => setShowCreateDialog(true)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-700 text-slate-300 border border-slate-600 hover:bg-slate-600 transition-colors"
+                    >
+                      <FilePlus className="w-3.5 h-3.5" />
+                      新建文本文件
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 新建文件对话框 */}
+            {showCreateDialog && (
+              <div className="px-5 py-3 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                <input
+                  value={newFileName}
+                  onChange={e => setNewFileName(e.target.value)}
+                  placeholder="输入文件名（如 notes.md）"
+                  className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/50"
+                  onKeyDown={e => e.key === 'Enter' && handleCreateTextFile()}
+                  autoFocus
+                />
+                <button
+                  onClick={handleCreateTextFile}
+                  disabled={!newFileName.trim() || uploading}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500 text-white hover:bg-cyan-400 transition-colors disabled:opacity-50"
+                >
+                  {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : '创建'}
+                </button>
+                <button
+                  onClick={() => { setShowCreateDialog(false); setNewFileName('') }}
+                  className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
             )}
 

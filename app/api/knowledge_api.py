@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+import os
+
+from fastapi import APIRouter, HTTPException, UploadFile, File
 from pydantic import BaseModel
 
 from app.store.knowledge_store import (
@@ -7,8 +9,11 @@ from app.store.knowledge_store import (
     list_module_files,
     read_knowledge_file,
     write_knowledge_file,
+    create_knowledge_file,
     update_module_status,
     is_agent_running,
+    is_any_task_running,
+    FILENAME_PATTERN,
 )
 
 router = APIRouter(prefix="/api/knowledge", tags=["knowledge"])
@@ -20,6 +25,11 @@ class UpdateStatusRequest(BaseModel):
 
 class UpdateFileRequest(BaseModel):
     content: str
+
+
+class CreateFileRequest(BaseModel):
+    filename: str
+    content: str = ""
 
 
 @router.get("")
@@ -34,6 +44,7 @@ async def api_get_module(module_name: str):
     meta = get_module_meta(module_name)
     if meta is None:
         raise HTTPException(status_code=404, detail="模块不存在")
+    meta["is_running"] = is_any_task_running()
     return meta
 
 
@@ -71,3 +82,39 @@ async def api_update_file(module_name: str, filename: str, req: UpdateFileReques
     # 编辑后自动更新状态为 edited
     update_module_status(module_name, "edited")
     return {"message": "文件已更新，状态已变为 edited"}
+
+
+@router.post("/{module_name}/files")
+async def api_upload_file(module_name: str, file: UploadFile = File(...)):
+    """上传文件到知识库模块。"""
+    if is_any_task_running():
+        raise HTTPException(status_code=409, detail="有任务正在运行，暂时禁止文件操作。")
+    # Sanitize 文件名：仅取 basename
+    filename = os.path.basename(file.filename or "untitled")
+    if not FILENAME_PATTERN.match(filename):
+        raise HTTPException(
+            status_code=422,
+            detail=f"文件名不合法: {filename}。仅允许字母、数字、下划线、连字符和点号。",
+        )
+    content = (await file.read()).decode("utf-8", errors="replace")
+    try:
+        meta = create_knowledge_file(module_name, filename, content)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="模块不存在")
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    return {"message": f"文件 {filename} 已上传", "meta": meta}
+
+
+@router.post("/{module_name}/files/text")
+async def api_create_text_file(module_name: str, req: CreateFileRequest):
+    """通过文本创建新的知识文件。"""
+    if is_any_task_running():
+        raise HTTPException(status_code=409, detail="有任务正在运行，暂时禁止文件操作。")
+    try:
+        meta = create_knowledge_file(module_name, req.filename, req.content)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="模块不存在")
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    return {"message": f"文件 {req.filename} 已创建", "meta": meta}

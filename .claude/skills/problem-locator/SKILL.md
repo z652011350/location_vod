@@ -23,6 +23,7 @@ description: "定位鸿蒙开发者问题。当开发者提交故障日志、错
 
 - 日志解析模式参考：`references/log_patterns.md`
 - 模块映射表参考：`references/module_mapping.md`
+- 组件路径映射表：`references/component_mapping.md`（闭源代码仓路径映射，CSV 格式，可选。实际映射数据在项目根目录 `config/component_mapping.csv` 中维护，部署时按需更新）
 
 ## 执行阶段
 
@@ -71,6 +72,7 @@ description: "定位鸿蒙开发者问题。当开发者提交故障日志、错
 1. **错误码精确匹配**：读取 `error_codes.json`，按提取到的错误码查找匹配项
 2. **API 调用链匹配**：读取 `api_chain.json`，按提取到的 API 名称查找调用链
 3. **常见问题匹配**：读取 `common_issues.md`，搜索与问题现象匹配的模式
+4. **额外知识文件搜索**：使用 Glob 列出 `knowledge_root/{module_name}/` 下所有文件（排除 `meta.json`），对非标准文件（非 `error_codes.json`、`api_chain.json`、`common_issues.md`、`overview.md`、`architecture.md`、`call_chains.md`、`api_reference.md`、`troubleshooting.md`）执行全文关键词搜索，匹配问题中的关键术语
 
 若知识库中找到匹配，记录匹配内容和来源文件。
 
@@ -115,7 +117,11 @@ description: "定位鸿蒙开发者问题。当开发者提交故障日志、错
 
 在 `code_repo_root` 中搜索相关实现代码：
 
-1. **范围限定**：若模块已识别，仅在 `code_repo_root/{module_dir}/` 下搜索；若未识别，根据 DOMAIN 和 .so 库名推测可能的目录
+1. **范围限定**：
+   - 若模块已识别，先检查 `references/component_mapping.csv` 是否存在
+   - 若 CSV 存在且包含该模块名（`component_name` 列），搜索范围为 `{code_repo_root}/{component_path}`（去掉前导 `/`）
+   - 若 CSV 不存在或模块不在映射表中，回退到 `{code_repo_root}/{module_dir}/` 下搜索
+   - 若未识别模块，根据 DOMAIN 和 .so 库名推测可能的目录
 2. **搜索策略**（最多读取 10 个源文件）：
    - Grep 提取到的错误码数字，定位错误处理逻辑
    - Grep 调用栈中的函数名，定位实际实现
