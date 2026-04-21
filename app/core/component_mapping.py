@@ -64,7 +64,10 @@ def load_component_mapping() -> list[dict]:
 
 
 def get_component_list(code_repo_root: str) -> list[dict]:
-    """获取组件列表，优先使用映射表，否则回退到顶级目录扫描。
+    """获取组件列表。
+
+    始终扫描 code_repo_root 下的所有目录作为基础列表。
+    若 CSV 映射表中定义了某组件的路径，则使用映射路径覆盖默认路径。
 
     Args:
         code_repo_root: 代码仓根目录路径
@@ -72,29 +75,27 @@ def get_component_list(code_repo_root: str) -> list[dict]:
     Returns:
         组件列表，每项包含 name 和 path。
     """
-    mapping = load_component_mapping()
-
-    if mapping:
-        root = Path(code_repo_root)
-        result = []
-        for row in mapping:
-            comp_path = row["component_path"].lstrip("/")
-            full_path = root / comp_path
-            result.append({
-                "name": row["component_name"],
-                "path": str(full_path),
-                "kit_name": row.get("kit_name", ""),
-            })
-        return result
-
-    # 回退：扫描顶级目录
     root = Path(code_repo_root)
     if not root.exists():
         return []
+
+    # 扫描所有顶级目录
     modules = []
     for d in sorted(root.iterdir()):
         if d.is_dir() and not d.name.startswith("."):
             modules.append({"name": d.name, "path": str(d)})
+
+    # 若有映射表，覆盖匹配组件的路径
+    mapping = load_component_mapping()
+    if mapping:
+        # 建立 component_name -> mapping_row 的索引
+        mapping_index = {row["component_name"]: row for row in mapping}
+        for mod in modules:
+            row = mapping_index.get(mod["name"])
+            if row:
+                mod["path"] = str(root / row["component_path"].lstrip("/"))
+                mod["kit_name"] = row.get("kit_name", "")
+
     return modules
 
 

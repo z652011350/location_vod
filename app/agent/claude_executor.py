@@ -46,6 +46,8 @@ class ClaudeExecutor:
     def _build_command(self, prompt: str) -> list[str]:
         """构建 CLI 命令参数列表。"""
         tools_str = ",".join(self.settings.agent.allowed_tools)
+        prompt = prompt.replace('\\','\\\\').replace('"','\\"').replace('\n','\\n')
+
         return [
             self.settings.agent.command,
             "-p", prompt,
