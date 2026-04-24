@@ -120,7 +120,7 @@ your_sdk_root/                    ← sdk_repo_root 指向这里
 
 **关键说明**：
 - `code_repo_root` 下的**一级子目录名**即为模块名，系统会自动扫描并列出所有可用模块
-- 如果你的代码仓是闭源版本，目录结构与开源版本不一致，需要配置 CSV 映射表（见下文）
+- 如果你的代码仓是特殊版本，目录结构与开源版本不一致，需要配置 CSV 映射表（见下文）
 - 如果暂时没有外部仓库，系统仍可运行，但知识库构建和代码搜索功能不可用
 
 ### 3. 配置系统
@@ -159,7 +159,7 @@ runtime:
 
 ### 4. 配置组件路径映射（可选）
 
-如果你的代码仓是**闭源版本**，内部目录结构与开源版本不同，需要通过 CSV 映射表告诉系统每个模块的实际路径。
+如果你的代码仓是**特殊版本**，内部目录结构与开源版本不同，需要通过 CSV 映射表告诉系统每个模块的实际路径。
 
 编辑 `config/component_mapping.csv`：
 
@@ -179,9 +179,9 @@ AVCodec Kit,multimedia_av_codec,multimedia_av_codec
 **什么时候需要编辑 CSV**：
 
 - 开源版本：`component_path` 与 `component_name` 相同，甚至可以不配置 CSV
-- 闭源版本：`component_path` 是模块在闭源代码仓中的实际路径，与目录名不同
+- 特殊版本：`component_path` 是模块在特殊代码仓中的实际路径，与目录名不同
 
-**示例**：闭源代码仓中 `multimedia_av_codec` 模块的实际路径是 `internal/media/av_codec`：
+**示例**：特殊代码仓中 `multimedia_av_codec` 模块的实际路径是 `internal/media/av_codec`：
 
 ```csv
 kit_name,component_name,component_path
